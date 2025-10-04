@@ -1,0 +1,6 @@
+@CampusLearn.ForumManagement.API_HostAddress = http://localhost:6200
+
+GET {{CampusLearn.ForumManagement.API_HostAddress}}/
+Accept: application/json
+
+###

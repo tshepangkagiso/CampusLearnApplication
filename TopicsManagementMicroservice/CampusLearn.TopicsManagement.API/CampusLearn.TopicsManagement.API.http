@@ -1,0 +1,6 @@
+@CampusLearn.TopicsManagement.API_HostAddress = http://localhost:6100
+
+GET {{CampusLearn.TopicsManagement.API_HostAddress}}/
+Accept: application/json
+
+###

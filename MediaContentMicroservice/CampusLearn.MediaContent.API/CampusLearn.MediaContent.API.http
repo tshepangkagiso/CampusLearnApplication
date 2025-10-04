@@ -1,0 +1,6 @@
+@CampusLearn.MediaContent.API_HostAddress = http://localhost:6400
+
+GET {{CampusLearn.MediaContent.API_HostAddress}}/
+Accept: application/json
+
+###

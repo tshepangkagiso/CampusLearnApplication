@@ -1,0 +1,6 @@
+@CampusLearn.Notifications.API_HostAddress = http://localhost:6300
+
+GET {{CampusLearn.Notifications.API_HostAddress}}/
+Accept: application/json
+
+###
