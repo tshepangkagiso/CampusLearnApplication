@@ -1,9 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
 // Add services to the container.
 //configuring database
 builder.Services.AddDbContext<TopicsDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TopicsDB")); //conection to db
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //conection to db
 });
 
 //configuring logging and logging to Seq
@@ -11,7 +12,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url") ?? "")
     .CreateLogger();
 
 //configuring swagger
@@ -20,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog();
 
 //rabbitmq configuration
+builder.Services.AddScoped<IMessageStoreTopic, MessageStoreTopic>();
 builder.Services.AddScoped<ITopicMessagePublisher, TopicMessagePublisher>();
 builder.Services.AddMassTransit(options =>
 {
@@ -27,11 +29,9 @@ builder.Services.AddMassTransit(options =>
 
     options.UsingRabbitMq((context, config) =>
     {
-        config.Host("localhost", "/", host =>
-        {
-            host.Username("myuser");
-            host.Password("mypass");
-        });
+        var rabbitMqConnection = builder.Configuration["ConnectionStrings:RabbitMQ"];
+
+        config.Host(new Uri(rabbitMqConnection), host => { });
 
         config.ReceiveEndpoint("topic-queue", e =>
         {
@@ -42,14 +42,15 @@ builder.Services.AddMassTransit(options =>
     });
 });
 
-builder.Services.AddControllers();
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 
+//run swagger in development mode
 if (app.Environment.IsDevelopment())
 {
-    //run swagger in development mode
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }

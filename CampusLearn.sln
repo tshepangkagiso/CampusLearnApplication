@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.Notifications.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.MediaContent.API", "MediaContentMicroservice\CampusLearn.MediaContent.API\CampusLearn.MediaContent.API.csproj", "{62018438-DD06-4BC7-B82C-359C3C3022E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.PrivateMessaging.API", "PrivateMessagingMicroservice\CampusLearn.PrivateMessaging.API\CampusLearn.PrivateMessaging.API.csproj", "{CF64FC12-CDC5-40AA-BC8D-7B14A4A25C44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.YarpGateway.ReverseProxy.API", "GatewayMicroservice\CampusLearn.YarpGateway.ReverseProxy.API\CampusLearn.YarpGateway.ReverseProxy.API.csproj", "{935026BF-796C-45F3-9546-1D62D91940E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{62018438-DD06-4BC7-B82C-359C3C3022E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62018438-DD06-4BC7-B82C-359C3C3022E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62018438-DD06-4BC7-B82C-359C3C3022E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF64FC12-CDC5-40AA-BC8D-7B14A4A25C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF64FC12-CDC5-40AA-BC8D-7B14A4A25C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF64FC12-CDC5-40AA-BC8D-7B14A4A25C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF64FC12-CDC5-40AA-BC8D-7B14A4A25C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935026BF-796C-45F3-9546-1D62D91940E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935026BF-796C-45F3-9546-1D62D91940E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935026BF-796C-45F3-9546-1D62D91940E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935026BF-796C-45F3-9546-1D62D91940E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

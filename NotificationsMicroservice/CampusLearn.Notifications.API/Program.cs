@@ -6,7 +6,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url") ?? "")
     .CreateLogger();
 
 //configuring swagger
@@ -15,6 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog();
 
 //configuring rabbitmq
+builder.Services.AddSingleton<IMessageStoreTopic, MessageStoreTopic>();
+builder.Services.AddSingleton<IMessageStoreForum, MessageStoreForum>();
 builder.Services.AddMassTransit(options =>
 {
     options.AddConsumer<ForumMessageConsumer>();
@@ -22,11 +24,9 @@ builder.Services.AddMassTransit(options =>
 
     options.UsingRabbitMq((context, config) =>
     {
-        config.Host("localhost", "/", host =>
-        {
-            host.Username("myuser");
-            host.Password("mypass");
-        });
+        var rabbitMqConnection = builder.Configuration["ConnectionStrings:RabbitMQ"];
+
+        config.Host(new Uri(rabbitMqConnection), host => { });
 
         config.ReceiveEndpoint("forum-queue", e =>
         {

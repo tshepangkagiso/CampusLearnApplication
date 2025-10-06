@@ -1,17 +1,19 @@
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
 // Add services to the container.
 //configuring database
 builder.Services.AddDbContext<ForumDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ForumDB"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 
 //configuring logging and logging to Seq
 Log.Logger = new LoggerConfiguration() 
     .MinimumLevel.Debug()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url")??"")
     .CreateLogger();
 
 //swagger configuration
@@ -20,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog();
 
 //rabbitmq configuration
+builder.Services.AddScoped<IMessageStoreForum, MessageStoreForum>();
 builder.Services.AddScoped<IForumMessagePublisher, ForumMessagePublisher>();
 builder.Services.AddMassTransit(options =>
 {
@@ -27,11 +30,9 @@ builder.Services.AddMassTransit(options =>
 
     options.UsingRabbitMq((context, config) =>
     {
-        config.Host("localhost", "/", host =>
-        {
-            host.Username("myuser");
-            host.Password("mypass");
-        });
+        var rabbitMqConnection = builder.Configuration["ConnectionStrings:RabbitMQ"];
+
+        config.Host(new Uri(rabbitMqConnection), host =>{});
 
         config.ReceiveEndpoint("forum-queue", e =>
         {
@@ -42,17 +43,17 @@ builder.Services.AddMassTransit(options =>
     });
 });
 
-builder.Services.AddControllers();
-
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 
+//run swagger in development mode
 if (app.Environment.IsDevelopment())
 {
-    //run swagger in development mode
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

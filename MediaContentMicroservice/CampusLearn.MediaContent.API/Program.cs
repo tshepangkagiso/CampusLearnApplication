@@ -1,5 +1,3 @@
-using Serilog;
-
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
@@ -7,8 +5,11 @@ Log.Logger = new LoggerConfiguration() //configuring logging and logging to Seq
     .MinimumLevel.Debug()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url") ?? "")
     .CreateLogger();
+
+//Add MinioService as a Singleton Service
+builder.Services.AddSingleton<MinioService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

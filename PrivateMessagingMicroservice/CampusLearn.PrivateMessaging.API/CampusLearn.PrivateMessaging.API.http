@@ -1,0 +1,6 @@
+@CampusLearn.PrivateMessaging.API_HostAddress = http://localhost:6500
+
+GET {{CampusLearn.PrivateMessaging.API_HostAddress}}/
+Accept: application/json
+
+###
