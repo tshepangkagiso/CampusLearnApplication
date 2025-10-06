@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,88 +8,30 @@ import { inject, Injectable } from '@angular/core';
 export class AppService {
   private httpClient = inject(HttpClient);
 
-  private users_management_url = 'http://localhost:6600/user/users';
-  private topics_management_url = 'http://localhost:6600/topic/topic';
-  private forums_management_url = 'http://localhost:6600/forum/forum';
-  private media_url = 'http://localhost:6600/media/media';
-  private messages_url = 'http://localhost:6600/messages/messages';
-  private notifications_url = 'http://localhost:6600/notifications/notifications';
+  private baseUrl = 'http://localhost:6600';
 
-  call_users(){
-    let value = "";
-    this.httpClient.get<string>(this.users_management_url).subscribe({
-      next: (res)=> {
-        value = res;
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    });
-    return value;
+
+  call_users(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/user/users`, { responseType: 'text' as 'json' });
   }
 
-  call_topics(){
-    let value = "";
-     this.httpClient.get<string>(this.topics_management_url).subscribe({
-      next: (res)=> {
-        value = res; 
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    });
-    return value;   
+  call_topics(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/topic/topic`, { responseType: 'text' as 'json' });
   }
 
-  call_forum(){
-    let value = "";
-     this.httpClient.get<string>(this.forums_management_url).subscribe({
-      next: (res)=> {
-        value = res;
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    }); 
-    return value;  
+  call_forum(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/forum/forum`, { responseType: 'text' as 'json' });
   }
 
-  call_media(){
-    let value = "";
-    this.httpClient.get<string>(this.media_url).subscribe({
-      next: (res)=> {
-        value = res;
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    });
-    return value;
+  call_media(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/media/media`, { responseType: 'text' as 'json' });
   }
 
-  call_messages(){
-    let value = "";
-     this.httpClient.get<string>(this.messages_url).subscribe({
-      next: (res)=> {
-        value = res;
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    }); 
-    return value;
+  call_messages(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/messages/messages`, { responseType: 'text' as 'json' });
   }
 
-  call_notifications(){
-    let value = "";
-    this.httpClient.get<string>(this.notifications_url).subscribe({
-      next: (res)=> {
-        value = res;
-      },
-      error:(err)=>{
-        console.log(err)
-      }
-    });
-    return value; 
+  call_notifications(): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/notifications/notifications`, { responseType: 'text' as 'json' });
   }
 }
