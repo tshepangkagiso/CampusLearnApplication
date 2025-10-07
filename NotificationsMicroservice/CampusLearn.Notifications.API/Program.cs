@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+// Add health checks service
+builder.Services.AddHealthChecks();
 
 //configuring logging and logging to Seq
 Log.Logger = new LoggerConfiguration() 
@@ -48,7 +50,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
+app.MapHealthChecks("/health");
 if (app.Environment.IsDevelopment())
 {
     //run swagger in development mode

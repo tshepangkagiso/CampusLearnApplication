@@ -1,8 +1,8 @@
-using CampusLearn.Code.Library.RabbitMQ.ForumRabbitMQ;
-using CampusLearn.PrivateMessaging.API.Controllers;
-
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+// Add health checks service
+builder.Services.AddHealthChecks();
+
 //configuring signal r
 builder.Services.AddSignalR();
 //configuring logging and logging to Seq
@@ -53,6 +53,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+
+app.MapHealthChecks("/health");
 
 if (app.Environment.IsDevelopment())
 {

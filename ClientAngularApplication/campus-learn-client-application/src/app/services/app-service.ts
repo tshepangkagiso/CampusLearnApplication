@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class AppService {
   private httpClient = inject(HttpClient);
 
-  private baseUrl = 'http://localhost:6600';
+  private baseUrl = 'http://localhost:7000';
 
 
   call_users(): Observable<string> {

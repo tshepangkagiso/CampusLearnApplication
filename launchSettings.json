@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "campuslearn.yarpgateway.reverseproxy.api": "StartDebugging",
+        "campuslearn.userprofilemanagement.api": "StartDebugging",
+        "campuslearn.topicsmanagement.api": "StartDebugging",
+        "campuslearn.privatemessaging.api": "StartDebugging",
+        "campuslearn.notifications.api": "StartDebugging",
+        "campuslearn.mediacontent.api": "StartDebugging",
+        "campuslearn.forummanagement.api": "StartDebugging"
+      }
+    }
+  }
+}

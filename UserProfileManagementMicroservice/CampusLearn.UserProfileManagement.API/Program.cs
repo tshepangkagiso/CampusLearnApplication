@@ -1,4 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
+// Add health checks service
+builder.Services.AddHealthChecks();
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserManagementDbContext>(options =>
@@ -22,7 +25,7 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
+app.MapHealthChecks("/health");
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
 {

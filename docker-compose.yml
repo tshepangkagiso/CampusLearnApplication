@@ -1,0 +1,285 @@
+version: "3.9"
+
+networks:
+  campuslearn-network:
+    driver: bridge
+    name: campuslearn-network
+
+services:
+  # ----------------------------
+  # YARP Gateway
+  # ----------------------------
+  campuslearn.yarpgateway.reverseproxy.api:
+    image: ${DOCKER_REGISTRY-}campuslearnyarpgatewayreverseproxyapi
+    build:
+      context: .
+      dockerfile: GatewayMicroservice/CampusLearn.YarpGateway.ReverseProxy.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DOTNET_ReadyToRun=1
+      - DOTNET_TieredPGO=1
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - Seq__Url=http://seq:80
+    ports:
+      - "7000:8080"
+      #- "7001:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+    depends_on:
+      - campuslearn.userprofilemanagement.api    
+      - campuslearn.topicsmanagement.api
+      - campuslearn.forummanagement.api
+      - campuslearn.mediacontent.api
+      - campuslearn.notifications.api
+      - campuslearn.privatemessaging.api
+
+  # ----------------------------
+  # APIs
+  # ----------------------------
+  campuslearn.userprofilemanagement.api:
+    image: ${DOCKER_REGISTRY-}campuslearnuserprofilemanagementapi
+    build:
+      context: .
+      dockerfile: UserProfileManagementMicroservice/CampusLearn.UserProfileManagement.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=UserProfileDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
+      - Seq__Url=http://seq:80
+    ports:
+      - "7100:8080"
+      #- "7101:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  campuslearn.topicsmanagement.api:
+    image: ${DOCKER_REGISTRY-}campuslearntopicsmanagementapi
+    build:
+      context: .
+      dockerfile: TopicsManagementMicroservice/CampusLearn.TopicsManagement.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - Seq__Url=http://seq:80
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TopicsDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
+    ports:
+      - "7200:8080"
+      #- "7201:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+
+  campuslearn.forummanagement.api:
+    image: ${DOCKER_REGISTRY-}campuslearnforummanagementapi
+    build:
+      context: .
+      dockerfile: ForumManagementMicroservices/CampusLearn.ForumManagement.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - Seq__Url=http://seq:80
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ForumDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
+    ports:
+      - "7300:8080"
+      #- "7301:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  campuslearn.mediacontent.api:
+    image: ${DOCKER_REGISTRY-}campuslearnmediacontentapi
+    build:
+      context: .
+      dockerfile: MediaContentMicroservice/CampusLearn.MediaContent.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - Seq__Url=http://seq:80
+      - MinIO__Endpoint=http://minio:9000
+      - MinIO__AccessKey=minioadmin
+      - MinIO__SecretKey=minioadmin123
+    ports:
+      - "7400:8080"
+      #- "7401:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+  campuslearn.notifications.api:
+    image: ${DOCKER_REGISTRY-}campuslearnnotificationsapi
+    build:
+      context: .
+      dockerfile: NotificationsMicroservice/CampusLearn.Notifications.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - Seq__Url=http://seq:80
+    ports:
+      - "7500:8080"
+      #- "7501:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+  campuslearn.privatemessaging.api:
+    image: ${DOCKER_REGISTRY-}campuslearnprivatemessagingapi
+    build:
+      context: .
+      dockerfile: PrivateMessagingMicroservice/CampusLearn.PrivateMessaging.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      #- ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - Seq__Url=http://seq:80
+    ports:
+      - "7600:8080"
+      #- "7601:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+  # ----------------------------
+  # Logging
+  # ----------------------------
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_PASSWORD=admin
+    ports:
+      - "5341:80"
+    volumes:
+      - seq_data:/data
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+  # ----------------------------
+  # Single SQL Server (Azure SQL Edge)
+  # ----------------------------
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123!
+    ports:
+      - "1435:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -Q 'SELECT 1' || exit 1"]
+      interval: 30s #The duration between health checks.
+      timeout: 10s #The maximum time allowed for the health check command to complete.
+      retries: 10 #The number of consecutive failures after which the container is considered unhealthy and potentially restarted.
+      start_period: 60s # Adjust if needed for initial startup
+
+  # ----------------------------
+  # RabbitMQ
+  # ----------------------------
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+  # ----------------------------
+  # MinIO
+  # ----------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
+# ----------------------------
+# Volumes
+# ----------------------------
+volumes:
+  seq_data:
+  sqlserver_data:
+  rabbitmq_data:
+  minio_data:
+
+
+

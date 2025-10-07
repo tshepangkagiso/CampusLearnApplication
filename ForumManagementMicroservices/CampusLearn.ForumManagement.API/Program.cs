@@ -1,4 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
+// Add health checks service
+builder.Services.AddHealthChecks();
+
 builder.Services.AddControllers();
 // Add services to the container.
 //configuring database
@@ -45,7 +48,7 @@ builder.Services.AddMassTransit(options =>
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
+app.MapHealthChecks("/health");
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
 {

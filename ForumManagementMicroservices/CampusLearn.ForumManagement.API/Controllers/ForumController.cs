@@ -14,7 +14,7 @@ public class ForumController : ControllerBase
     }
 
     [HttpGet("migration")]
-    public async Task<IActionResult> Get()
+    public IActionResult Get()
     {
         try
         {
@@ -22,9 +22,9 @@ public class ForumController : ControllerBase
             if (this.context.Database.CanConnect())
             {
                 Console.WriteLine("Database exists. Applying migrations...");
-                await this.context.Database.MigrateAsync();
+                this.context.Database.Migrate();
                 Console.WriteLine("Migrations applied successfully.");
-                return Ok();
+                return Ok(new { message = "Migrations applied successfully. To ForumDB"});
             }
             else
             {
@@ -37,7 +37,7 @@ public class ForumController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message.ToString(), "An error occurred while migrating the database.");
-            return BadRequest();
+            return BadRequest(new { error = ex.Message.ToString() });
         }
     }
 
