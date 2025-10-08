@@ -10,7 +10,9 @@ public class Login
     public string Email { get; set; } = string.Empty;
 
     [Required]
-    public string Password{ get; set; } = string.Empty;
+    public string PasswordHash { get; set; } = string.Empty; 
+
+    public int PasswordSalt { get; set; } 
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastPasswordChange { get; set; }

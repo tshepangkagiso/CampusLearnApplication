@@ -7,7 +7,8 @@ builder.Services.AddControllers();
 //configuring database
 builder.Services.AddDbContext<TopicsDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //conection to db
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("LocalTestConnection")); // for local ssms
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //connecting to docker db
 });
 
 //configuring logging and logging to Seq
@@ -46,7 +47,6 @@ builder.Services.AddMassTransit(options =>
 });
 
 
-
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.MapHealthChecks("/health");
@@ -59,8 +59,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

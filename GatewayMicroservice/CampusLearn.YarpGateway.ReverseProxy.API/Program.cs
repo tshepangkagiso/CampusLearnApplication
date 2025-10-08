@@ -1,25 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// no artificial limit
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.AddServerHeader = false;
-    options.Limits.MaxRequestBodySize = null; // no artificial limit
+    options.Limits.MaxRequestBodySize = null; 
 });
 
+// lighter logging level
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information() // lighter logging level
+    .MinimumLevel.Information() 
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url") ?? "")
     .CreateLogger();
 builder.Host.UseSerilog();
 
-// Add HttpClient for fetching Swagger JSON from microservices
-builder.Services.AddHttpClient();
-
-// Configure YARP
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 // CORS
 builder.Services.AddCors(options =>
@@ -32,10 +28,43 @@ builder.Services.AddCors(options =>
     });
 });
 
-var app = builder.Build();
+// Configure YARP
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+// Add JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+/*// Add Authorization with Policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("StudentOnly", policy => policy.RequireRole("Student"));
+    options.AddPolicy("TutorOnly", policy => policy.RequireRole("Tutor", "Admin"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});*/
+
+var app = builder.Build();
 // Only HTTP, skip HTTPS redirect (since Docker is internal HTTP only)
 app.UseCors("ClientApp");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapReverseProxy();
 
 app.Run();

@@ -10,6 +10,9 @@ public class UsersController : ControllerBase
         this.context = context;
     }
 
+
+    //http://localhost:6000/users/migration
+    //route creates a new database in sqlserver
     [HttpGet("migration")]
     public IActionResult Get()
     {
@@ -38,6 +41,8 @@ public class UsersController : ControllerBase
         }
     }
 
+    //http://localhost:6000/users/
+    //route is for testing if api works
     [HttpGet]
     public IActionResult GetResponse()
     {
@@ -51,40 +56,4 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpGet("health/database")]
-    public async Task<IActionResult> CheckDatabaseHealth()
-    {
-        try
-        {
-            // Check if database is reachable
-            var canConnect = await context.Database.CanConnectAsync();
-
-            if (!canConnect)
-            {
-                return StatusCode(503, new
-                {
-                    status = "Unhealthy",
-                    message = "Database is not reachable",
-                    timestamp = DateTime.UtcNow
-                });
-            }
-
-            return Ok(new
-            {
-                status = "Healthy",
-                message = "Database is responding correctly",
-                timestamp = DateTime.UtcNow
-            });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(503, new
-            {
-                status = "Unhealthy",
-                message = "Database health check failed",
-                error = ex.Message,
-                timestamp = DateTime.UtcNow
-            });
-        }
-    }
 }

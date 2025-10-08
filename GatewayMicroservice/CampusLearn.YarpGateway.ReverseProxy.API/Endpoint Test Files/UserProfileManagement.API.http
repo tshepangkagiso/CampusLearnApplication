@@ -1,0 +1,66 @@
+@route = http://localhost:7000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiI3ODkwMTJAc3R1ZGVudC5iZWxnaXVtY2FtcHVzLmFjLnphIiwianRpIjoiMmNiZmM2ZWEtYmMxYi00OGZkLWEwODMtMTVhZWU2YjE4ZDQyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkphbmUgU21pdGgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUdXRvciIsIlVzZXJQcm9maWxlSUQiOiIyIiwiU3R1ZGVudE51bWJlciI6Ijc4OTAxMiIsIlF1YWxpZmljYXRpb24iOiJCQ09NIiwiRnVsbE5hbWUiOiJKYW5lIFNtaXRoIiwiSXNBY3RpdmUiOiJUcnVlIiwiSXNTdHVkZW50IjoiRmFsc2UiLCJJc1R1dG9yIjoiVHJ1ZSIsIklzQWRtaW4iOiJGYWxzZSIsImV4cCI6MTc1OTkwODEzNSwiaXNzIjoiQ2FtcHVzTGVhcm4uVXNlck1hbmFnZW1lbnQiLCJhdWQiOiJDYW1wdXNMZWFybi5TZXJ2aWNlcyJ9.UQgPySk-EylmZ3DLuMV6wJb69qJKZZl1FXjPJTXxqJk
+
+GET {{route}}/user/users
+Accept: application/json
+Authorization: Bearer {{token}}
+###
+
+GET {{route}}/user/users/migration
+Accept: application/json
+Authorization: Bearer {{token}}
+###
+
+### Register a new Student
+POST {{route}}/authentication/auth/register
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surname": "Doe", 
+  "email": "123456@student.belgiumcampus.ac.za",
+  "password": "Password123!",
+  "userRole": 0,
+  "qualification": 1,
+  "studentNumber": 123456
+}
+
+### Register a new Tutor
+POST {{route}}/authentication/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jane",
+  "surname": "Smith",
+  "email": "789012@student.belgiumcampus.ac.za",
+  "password": "TutorPass123!",
+  "userRole": 1,
+  "qualification": 2,
+  "studentNumber": 789012
+}
+
+### Login as Student
+POST {{route}}/authentication/auth/login
+Content-Type: application/json
+
+{
+  "email": "123456@student.belgiumcampus.ac.za",
+  "password": "Password123!"
+}
+
+### Login as Tutor  
+POST {{route}}/authentication/auth/login
+Content-Type: application/json
+
+{
+  "email": "789012@student.belgiumcampus.ac.za",
+  "password": "TutorPass123!"
+}
+
+### Validate Token (Protected route example)
+POST {{route}}/authentication/auth/validate-token
+Content-Type: application/json
+
+{
+  "token": "{{token}}"
+}

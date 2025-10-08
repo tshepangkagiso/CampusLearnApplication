@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace CampusLearn.PrivateMessaging.API.Controllers;
+﻿namespace CampusLearn.PrivateMessaging.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class MessagesController : ControllerBase
+public class MessageController : ControllerBase
 {
     [HttpGet]
     public IActionResult GetResponse()

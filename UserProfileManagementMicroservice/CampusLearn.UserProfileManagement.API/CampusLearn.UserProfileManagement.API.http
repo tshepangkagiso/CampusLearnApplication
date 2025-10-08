@@ -1,6 +1,67 @@
-@CampusLearn.UserProfileManagement.API_HostAddress = http://localhost:6000
+@route = http://localhost:6000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiI3ODkwMTJAc3R1ZGVudC5iZWxnaXVtY2FtcHVzLmFjLnphIiwianRpIjoiMzljZWYzOTUtZjA1Mi00NjkwLWIyYjMtYjliY2Y5NGZiM2ZhIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkphbmUgU21pdGgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUdXRvciIsIlVzZXJQcm9maWxlSUQiOiIyIiwiU3R1ZGVudE51bWJlciI6Ijc4OTAxMiIsIlF1YWxpZmljYXRpb24iOiJCQ09NIiwiRnVsbE5hbWUiOiJKYW5lIFNtaXRoIiwiSXNBY3RpdmUiOiJUcnVlIiwiSXNTdHVkZW50IjoiRmFsc2UiLCJJc1R1dG9yIjoiVHJ1ZSIsIklzQWRtaW4iOiJGYWxzZSIsImV4cCI6MTc1OTkwNDk5OSwiaXNzIjoiQ2FtcHVzTGVhcm4uVXNlck1hbmFnZW1lbnQiLCJhdWQiOiJDYW1wdXNMZWFybi5TZXJ2aWNlcyJ9.IFPVD26EQAJ_ciUMCQVMjzHzbhyp1mGl20bPtRr7MJ8
 
-GET {{CampusLearn.UserProfileManagement.API_HostAddress}}/
+GET {{route}}/users
+Accept: application/json
+Authorization: Bearer {{token}}
+###
+
+GET {{route}}/users/migration
 Accept: application/json
 
 ###
+
+### Register a new Student
+POST {{route}}/users/register
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surname": "Doe", 
+  "email": "123456@student.belgiumcampus.ac.za",
+  "password": "Password123!",
+  "userRole": 0,
+  "qualification": 1,
+  "studentNumber": 123456
+}
+
+### Register a new Tutor
+POST {{route}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jane",
+  "surname": "Smith",
+  "email": "789012@student.belgiumcampus.ac.za",
+  "password": "TutorPass123!",
+  "userRole": 1,
+  "qualification": 2,
+  "studentNumber": 789012
+}
+
+### Login as Student
+POST {{route}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "123456@student.belgiumcampus.ac.za",
+  "password": "Password123!"
+}
+
+### Login as Tutor  
+POST {{route}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "789012@student.belgiumcampus.ac.za",
+  "password": "TutorPass123!"
+}
+
+### Validate Token (Protected route example)
+POST {{route}}/auth/validate-token
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "token": "{{token}}"
+}

@@ -7,3 +7,4 @@ global using Microsoft.AspNetCore.SignalR;
 
 global using CampusLearn.Code.Library.RabbitMQ.ForumRabbitMQ;
 global using CampusLearn.PrivateMessaging.API.Controllers;
+global using Microsoft.AspNetCore.Authorization;

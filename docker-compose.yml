@@ -21,6 +21,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       #- ASPNETCORE_HTTPS_PORTS=8081
       - Seq__Url=http://seq:80
+      - Jwt__Secret=fe6f0714c5d25fe153c50009d4cd687d
+      - Jwt__Issuer=CampusLearn.UserManagement
+      - Jwt__Audience=CampusLearn.Services
     ports:
       - "7000:8080"
       #- "7001:8081"
@@ -54,6 +57,9 @@ services:
       #- ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=UserProfileDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
       - Seq__Url=http://seq:80
+      - Jwt__Secret=fe6f0714c5d25fe153c50009d4cd687d
+      - Jwt__Issuer=CampusLearn.UserManagement
+      - Jwt__Audience=CampusLearn.Services
     ports:
       - "7100:8080"
       #- "7101:8081"

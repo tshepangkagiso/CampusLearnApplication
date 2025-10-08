@@ -1,6 +1,0 @@
-@CampusLearn.UserProfileManagement.API_HostAddress = http://localhost:6600
-
-GET {{CampusLearn.UserProfileManagement.API_HostAddress}}/
-Accept: application/json
-
-###

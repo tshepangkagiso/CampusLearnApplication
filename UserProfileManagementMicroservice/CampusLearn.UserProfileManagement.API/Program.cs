@@ -1,4 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
+
 // Add health checks service
 builder.Services.AddHealthChecks();
 
@@ -6,7 +7,8 @@ builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserManagementDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //connecting to db
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("LocalTestConnection")); // for local ssms
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //connecting to docker db
 });
 
 //configuring logging and logging to Seq
@@ -19,13 +21,18 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Host.UseSerilog();
 
 
+//Dependency Injection
+builder.Services.AddSingleton<IHashingService, HashingService>();
+builder.Services.AddSingleton<IJwtService, JwtService>();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+
 app.MapHealthChecks("/health");
+
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
 {
@@ -36,8 +43,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
@@ -46,13 +51,4 @@ app.Run();
 /*
     # "https://localhost:6001;http://localhost:6000" - ports of this api
     # "http://localhost:6000/swagger" - route to open swagger documentation
-
-    Configuration to backend services - this are routes client must call
-    # http://localhost:6000/users - maps to user profile management api
-    # http://localhost:6100/topic - maps to topics management api
-    # http://localhost:6200/forum - maps to forum management api
-    # http://localhost:6300/notifications - maps to notifications api
-    # http://localhost:6400/media - maps to media content api
-    # http://localhost:6500/messages - maps to private messaging api
-
  */

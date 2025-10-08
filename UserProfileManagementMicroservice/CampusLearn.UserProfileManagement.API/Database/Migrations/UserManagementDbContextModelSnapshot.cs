@@ -49,9 +49,12 @@ namespace CampusLearn.UserProfileManagement.API.Database.Migrations
                     b.Property<DateTime?>("LockoutEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PasswordSalt")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserProfileID")
                         .HasColumnType("int");

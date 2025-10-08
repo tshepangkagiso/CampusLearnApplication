@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog();
 builder.Services.AddControllers();
 
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.MapHealthChecks("/health");
@@ -32,8 +33,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

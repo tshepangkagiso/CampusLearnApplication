@@ -1,13 +1,13 @@
-﻿namespace CampusLearn.Notifications.API.Controllers;
+﻿namespace CampusLearn.Notification.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class NotificationsController : ControllerBase
+public class NotificationController : ControllerBase
 {
     private readonly IMessageStoreForum messageStoreForum;
     private readonly IMessageStoreTopic messageStoreTopic;
 
-    public NotificationsController(IMessageStoreForum messageStoreForum, IMessageStoreTopic messageStoreTopic)
+    public NotificationController(IMessageStoreForum messageStoreForum, IMessageStoreTopic messageStoreTopic)
     {
         this.messageStoreForum = messageStoreForum;
         this.messageStoreTopic = messageStoreTopic;

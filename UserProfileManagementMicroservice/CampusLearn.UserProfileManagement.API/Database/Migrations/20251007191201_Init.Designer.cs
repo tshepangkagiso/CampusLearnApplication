@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusLearn.UserProfileManagement.API.Database.Migrations
 {
     [DbContext(typeof(UserManagementDbContext))]
-    [Migration("20251004010428_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251007191201_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,9 +52,12 @@ namespace CampusLearn.UserProfileManagement.API.Database.Migrations
                     b.Property<DateTime?>("LockoutEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PasswordSalt")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserProfileID")
                         .HasColumnType("int");
