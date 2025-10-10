@@ -1,1 +1,157 @@
-<p>student-component works!</p>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1>Campus<span>Learn</span></h1>
+        </div>
+        
+        <div class="user-info">
+            <h3>Name: {{name}}</h3>
+            <p>Qualification: {{qualification}}</p>
+        </div>
+        
+        <ul class="nav-links">
+            <li class="active"><a href="#"><i>📊</i> Dashboard</a></li>
+            <li><a href="#"><i>📚</i> My Topics</a></li>
+            <li><a href="#"><i>👥</i> Find Tutors</a></li>
+            <li><a href="#"><i>💬</i> Messages</a></li>
+            <li><a href="#"><i>🔍</i> Forum</a></li>
+            <li><a href="#"><i>🤖</i> AI Assistant</a></li>
+            <li><a href="#"><i>⚙️</i> Settings</a></li>
+            <li><a href="#" (click)="onLogout()"><i>🚪</i> Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Student Dashboard</h2>
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/150?img=32" alt="Profile">
+                <span>{{name}}</span>
+            </div>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="card stat-card">
+                <div class="stat-icon primary">
+                    <i>📚</i>
+                </div>
+                <div class="stat-info">
+                    <h3>5</h3>
+                    <p>Active Topics</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon success">
+                    <i>✅</i>
+                </div>
+                <div class="stat-info">
+                    <h3>12</h3>
+                    <p>Questions Resolved</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon warning">
+                    <i>⏱️</i>
+                </div>
+                <div class="stat-info">
+                    <h3>3</h3>
+                    <p>Pending Responses</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="section-title">My Help Topics</h3>
+        <div class="topics-grid">
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">Database Normalization</div>
+                    <div class="topic-status status-active">Active</div>
+                </div>
+                <div class="topic-tutor">
+                    <img src="https://i.pravatar.cc/150?img=8" alt="Tutor">
+                    <span>Tutor: James Wilson</span>
+                </div>
+                <div class="topic-description">
+                    Understanding 3NF and BCNF with practical examples from our assignment.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Discussion</button>
+                    <button class="btn btn-outline">Resources</button>
+                </div>
+            </div>
+            
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">Java Inheritance</div>
+                    <div class="topic-status status-active">Active</div>
+                </div>
+                <div class="topic-tutor">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Tutor">
+                    <span>Tutor: Maria Garcia</span>
+                </div>
+                <div class="topic-description">
+                    Clarification on polymorphism and method overriding concepts.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Discussion</button>
+                    <button class="btn btn-outline">Resources</button>
+                </div>
+            </div>
+            
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">Financial Accounting</div>
+                    <div class="topic-status status-pending">Pending</div>
+                </div>
+                <div class="topic-tutor">
+                    <img src="https://i.pravatar.cc/150?img=0" alt="Tutor">
+                    <span>Awaiting Tutor</span>
+                </div>
+                <div class="topic-description">
+                    Help with balance sheet preparation for case study.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Details</button>
+                    <button class="btn btn-outline">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="section-title">Recent Activity</h3>
+        <div class="card recent-activity">
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon primary">
+                        <i>💬</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>James Wilson responded to your question about Database Normalization</p>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon success">
+                        <i>📚</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>New resources uploaded for Java Inheritance topic</p>
+                        <div class="activity-time">5 hours ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon primary">
+                        <i>👥</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>Maria Garcia assigned as your tutor for Java Inheritance</p>
+                        <div class="activity-time">Yesterday</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

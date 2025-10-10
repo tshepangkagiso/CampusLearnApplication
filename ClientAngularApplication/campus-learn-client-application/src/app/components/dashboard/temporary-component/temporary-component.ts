@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth-service';
 import { AppService } from '../../../services/app-service';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-temporary-component',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './temporary-component.html',
   styleUrl: './temporary-component.css'
 })

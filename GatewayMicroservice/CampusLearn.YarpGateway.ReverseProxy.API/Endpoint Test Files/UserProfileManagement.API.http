@@ -39,6 +39,21 @@ Content-Type: application/json
   "studentNumber": 789012
 }
 
+
+### Register a new Admin
+POST {{route}}/authentication/auth/register
+Content-Type: application/json
+
+{
+  "name": "Peter",
+  "surname": "Ndoda",
+  "email": "80000@student.belgiumcampus.ac.za",
+  "password": "AdminPass123!",
+  "userRole": 2,
+  "qualification": 2,
+  "studentNumber": 80000
+}
+
 ### Login as Student
 POST {{route}}/authentication/auth/login
 Content-Type: application/json
@@ -55,6 +70,15 @@ Content-Type: application/json
 {
   "email": "789012@student.belgiumcampus.ac.za",
   "password": "TutorPass123!"
+}
+
+### Login as Admin  
+POST {{route}}/authentication/auth/login
+Content-Type: application/json
+
+{
+  "email": "80000@student.belgiumcampus.ac.za",
+  "password": "AdminPass123!"
 }
 
 ### Validate Token (Protected route example)

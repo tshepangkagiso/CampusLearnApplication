@@ -1,1 +1,111 @@
-<p>registration-component works!</p>
+<div class="register-container">
+  <h1>Register</h1>
+
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">First Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="user.name"
+          required
+          placeholder="Enter your name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="surname">Last Name</label>
+        <input
+          type="text"
+          id="surname"
+          name="surname"
+          [(ngModel)]="user.surname"
+          required
+          placeholder="Enter your surname"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="user.email"
+        required
+        placeholder="Enter your email"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="user.password"
+        required
+        placeholder="Enter your password"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="userRole">Role</label>
+        <select
+          id="userRole"
+          name="userRole"
+          [(ngModel)]="user.userRole"
+          required
+        >
+          <option [ngValue]="0">Student</option>
+          <option [ngValue]="1">Tutor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="qualification">Qualification</label>
+        <select
+          id="qualification"
+          name="qualification"
+          [(ngModel)]="user.qualification"
+          required
+        >
+          <option [ngValue]="0">DIP</option>
+          <option [ngValue]="1">BIT</option>
+          <option [ngValue]="2">BCOM</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="studentNumber">Student Number</label>
+      <input
+        type="number"
+        id="studentNumber"
+        name="studentNumber"
+        [(ngModel)]="user.studentNumber"
+        placeholder="Enter student number"
+        required
+      />
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="loading || !registerForm.valid">
+      <span *ngIf="!loading">Register</span>
+      <div *ngIf="loading" class="spinner"></div>
+    </button>
+
+    <div class="message" [class.error]="error" *ngIf="message">
+      {{ message }}
+    </div>
+
+    <div class="login-link">
+      <p>Already have an account?</p>
+      <a routerLink="/login" class="btn-secondary">Go to Login</a>
+    </div>
+  </form>
+</div>
+

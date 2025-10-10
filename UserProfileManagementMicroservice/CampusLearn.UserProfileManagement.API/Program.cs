@@ -41,6 +41,47 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+//auto migration
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<UserManagementDbContext>();
+
+        try
+        {
+            // First, ensure the database exists
+            if (!dbContext.Database.CanConnect())
+            {
+                Log.Information("Database doesn't exist. Creating...");
+
+                // Create the database if it doesn't exist
+                dbContext.Database.EnsureCreated();
+                Log.Information("Database created successfully.");
+            }
+
+            // Then apply migrations
+            var pendingMigrations = dbContext.Database.GetPendingMigrations();
+            if (pendingMigrations.Any())
+            {
+                Log.Information($"Applying {pendingMigrations.Count()} pending migrations...");
+                dbContext.Database.Migrate();
+                Log.Information("Migrations applied successfully.");
+            }
+            else
+            {
+                Log.Information("No pending migrations.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Database initialization error: {ex.Message}");
+        }
+    }
+}
+
+
 app.UseHttpsRedirection();
 
 app.MapControllers();

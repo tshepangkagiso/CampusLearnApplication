@@ -1,0 +1,32 @@
+<!-- restricted-page.component.html -->
+<div class="restricted-wrapper">
+  <div class="restricted-card" role="alert" aria-live="polite">
+    <!-- lock icon -->
+    <div class="icon-wrap" aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="lock-icon">
+        <path d="M12 2a4 4 0 0 0-4 4v3H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4zM8 9V6a4 4 0 1 1 8 0v3H8z"/>
+      </svg>
+    </div>
+
+    <h1 class="title">Access Restricted</h1>
+
+    <p class="subtitle">
+      You do not have permission to view this page. Please login with an authorized account
+      or contact the administrator if you believe this is an error.
+    </p>
+
+    <div class="meta">
+      <span class="meta-item">You are denied Access!</span>
+      <span class="meta-item">Attempted: <strong>{{ attemptedPath || '/' }}</strong></span>
+    </div>
+
+    <div class="actions">
+      <a routerLink="/login" class="btn btn-primary">Go to Login</a>
+      <button class="btn btn-outline" (click)="onLogout()">Logout</button>
+      <a href="mailto:admin@example.com" class="btn btn-link">Contact Admin</a>
+    </div>
+
+    <p class="small-note">If your session expired, logging out and logging back in may fix this.</p>
+  </div>
+</div>
+

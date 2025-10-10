@@ -1,1 +1,214 @@
-<p>admin-component works!</p>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1>Campus<span>Learn</span></h1>
+        </div>
+        
+        <div class="user-info">
+            <h3>{{name}} <span class="badge">Admin</span></h3>
+            <p>Role: {{role}} </p>
+            <p>ID: {{ID}}</p>
+        </div>
+        
+        <ul class="nav-links">
+            <li class="active"><a href="#"><i>📊</i> Dashboard</a></li>
+            <li><a href="#"><i>👥</i> User Management</a></li>
+            <li><a href="#"><i>👨‍🏫</i> Tutor Management</a></li>
+            <li><a href="#"><i>📚</i> Topic Management</a></li>
+            <li><a href="#"><i>💬</i> Forum Moderation</a></li>
+            <li><a href="#"><i>📈</i> Analytics</a></li>
+            <li><a href="#"><i>⚙️</i> System Settings</a></li>
+            <li><a href="#" (click) ="onLogout()"><i>🚪</i> Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Admin Dashboard</h2>
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/150?img=58" alt="Profile">
+                <span>{{name}}</span>
+            </div>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="card stat-card">
+                <div class="stat-icon primary">
+                    <i>👥</i>
+                </div>
+                <div class="stat-info">
+                    <h3>342</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon success">
+                    <i>👨‍🏫</i>
+                </div>
+                <div class="stat-info">
+                    <h3>28</h3>
+                    <p>Active Tutors</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon warning">
+                    <i>📚</i>
+                </div>
+                <div class="stat-info">
+                    <h3>156</h3>
+                    <p>Active Topics</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon danger">
+                    <i>⚠️</i>
+                </div>
+                <div class="stat-info">
+                    <h3>5</h3>
+                    <p>Pending Approvals</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tables-container">
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-title">Recent Tutor Applications</div>
+                    <button class="btn btn-primary">View All</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Program</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>David Miller</td>
+                            <td>BIT - Year 2</td>
+                            <td><span class="status status-pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Approve</button>
+                                <button class="action-btn btn-delete">Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lisa Anderson</td>
+                            <td>BCom - Year 3</td>
+                            <td><span class="status status-pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Approve</button>
+                                <button class="action-btn btn-delete">Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Robert Taylor</td>
+                            <td>Diploma - Year 2</td>
+                            <td><span class="status status-pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Approve</button>
+                                <button class="action-btn btn-delete">Reject</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-title">System Users</div>
+                    <button class="btn btn-primary">Manage</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sarah Johnson</td>
+                            <td>Student</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Edit</button>
+                                <button class="action-btn btn-delete">Block</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>James Wilson</td>
+                            <td>Tutor</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Edit</button>
+                                <button class="action-btn btn-delete">Block</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Michael Brown</td>
+                            <td>Student</td>
+                            <td><span class="status status-inactive">Inactive</span></td>
+                            <td>
+                                <button class="action-btn btn-edit">Edit</button>
+                                <button class="action-btn btn-delete">Activate</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <h3 class="section-title">Recent System Activity</h3>
+        <div class="card recent-activity">
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon primary">
+                        <i>👥</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>New student registration: Emma Davis (BCom Information Systems)</p>
+                        <div class="activity-time">30 minutes ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon success">
+                        <i>👨‍🏫</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>Tutor application approved: Maria Garcia (BIT Year 3)</p>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon warning">
+                        <i>⚠️</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>Reported content in forum thread "Advanced Java Concepts"</p>
+                        <div class="activity-time">5 hours ago</div>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon primary">
+                        <i>📚</i>
+                    </div>
+                    <div class="activity-content">
+                        <p>New topic created: "Financial Accounting Principles" by Tutor Lisa Anderson</p>
+                        <div class="activity-time">Yesterday</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

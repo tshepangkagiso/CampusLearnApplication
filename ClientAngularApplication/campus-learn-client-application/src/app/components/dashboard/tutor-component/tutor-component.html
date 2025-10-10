@@ -1,1 +1,167 @@
-<p>tutor-component works!</p>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1>Campus<span>Learn</span></h1>
+        </div>
+        
+        <div class="user-info">
+            <h3>{{name}}<span class="badge">Tutor</span></h3>
+            <p>Qualification: {{qualification}}</p>
+        </div>
+        
+        <ul class="nav-links">
+            <li class="active"><a href="#"><i>📊</i> Dashboard</a></li>
+            <li><a href="#"><i>👨‍🏫</i> My Tutor Topics</a></li>
+            <li><a href="#"><i>❓</i> Student Questions</a></li>
+            <li><a href="#"><i>💬</i> Messages</a></li>
+            <li><a href="#"><i>📚</i> Resources</a></li>
+            <li><a href="#"><i>📈</i> Performance</a></li>
+            <li><a href="#"><i>⚙️</i> Settings</a></li>
+            <li><a href="#" (click) = "onLogout()"><i>🚪</i> Logout</a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Tutor Dashboard</h2>
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/150?img=8" alt="Profile">
+                <span>{{name}}</span>
+            </div>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="card stat-card">
+                <div class="stat-icon primary">
+                    <i>👥</i>
+                </div>
+                <div class="stat-info">
+                    <h3>8</h3>
+                    <p>Active Students</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon success">
+                    <i>✅</i>
+                </div>
+                <div class="stat-info">
+                    <h3>24</h3>
+                    <p>Questions Answered</p>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-icon warning">
+                    <i>⏱️</i>
+                </div>
+                <div class="stat-info">
+                    <h3>3</h3>
+                    <p>Pending Responses</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-title">
+            <h3>My Tutoring Topics</h3>
+            <button class="btn btn-primary">Create New Topic</button>
+        </div>
+        <div class="topics-grid">
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">Database Normalization</div>
+                    <div class="topic-status status-active">Active</div>
+                </div>
+                <div class="topic-student">
+                    <img src="https://i.pravatar.cc/150?img=32" alt="Student">
+                    <span>Sarah Johnson</span>
+                </div>
+                <div class="topic-description">
+                    Helping students understand 3NF and BCNF with practical examples.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Discussion</button>
+                    <button class="btn btn-success">Upload Resources</button>
+                </div>
+            </div>
+            
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">SQL Queries</div>
+                    <div class="topic-status status-active">Active</div>
+                </div>
+                <div class="topic-student">
+                    <img src="https://i.pravatar.cc/150?img=45" alt="Student">
+                    <span>Michael Brown</span>
+                </div>
+                <div class="topic-description">
+                    Advanced JOIN operations and subqueries for BIT212 assignment.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Discussion</button>
+                    <button class="btn btn-success">Upload Resources</button>
+                </div>
+            </div>
+            
+            <div class="card topic-card">
+                <div class="topic-header">
+                    <div class="topic-title">Web Development</div>
+                    <div class="topic-status status-pending">Pending</div>
+                </div>
+                <div class="topic-student">
+                    <img src="https://i.pravatar.cc/150?img=22" alt="Student">
+                    <span>Emma Davis</span>
+                </div>
+                <div class="topic-description">
+                    JavaScript event handling and DOM manipulation concepts.
+                </div>
+                <div class="topic-actions">
+                    <button class="btn btn-primary">View Discussion</button>
+                    <button class="btn btn-success">Upload Resources</button>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="section-title">Recent Student Questions</h3>
+        <div class="card recent-questions">
+            <ul class="questions-list">
+                <li class="question-item">
+                    <div class="question-header">
+                        <div class="question-title">Clarification on BCNF</div>
+                        <div class="question-time">30 minutes ago</div>
+                    </div>
+                    <div class="question-student">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Student">
+                        <span>Sarah Johnson</span>
+                    </div>
+                    <div class="question-content">
+                        I'm confused about when to decompose relations in BCNF. Could you explain with an example from our assignment?
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn btn-primary btn-small">Respond</button>
+                        <button class="btn btn-success btn-small">Schedule Session</button>
+                    </div>
+                </li>
+                <li class="question-item">
+                    <div class="question-header">
+                        <div class="question-title">Help with JOIN query</div>
+                        <div class="question-time">2 hours ago</div>
+                    </div>
+                    <div class="question-student">
+                        <img src="https://i.pravatar.cc/150?img=45" alt="Student">
+                        <span>Michael Brown</span>
+                    </div>
+                    <div class="question-content">
+                        I'm trying to join three tables but getting duplicate results. Can you review my query?
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn btn-primary btn-small">Respond</button>
+                        <button class="btn btn-success btn-small">Schedule Session</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
