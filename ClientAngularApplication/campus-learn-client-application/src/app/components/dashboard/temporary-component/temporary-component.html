@@ -1,0 +1,88 @@
+<section class="dashboard">
+  <header class="dashboard__header">
+    <h1 class="dashboard__title">System Messages</h1>
+    <p class="dashboard__subtitle">Latest messages from each microservice</p>
+  </header>
+
+  <div class="dashboard__grid">
+    <article class="card card--accent-1">
+      <div class="card__icon" aria-hidden="true">
+        <!-- user icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <h3 class="card__title">User management</h3>
+      <p class="card__body">{{ users || 'No message' }}</p>
+    </article>
+
+    <article class="card card--accent-2">
+      <div class="card__icon" aria-hidden="true">
+        <!-- topic icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="14" rx="2"></rect>
+          <path d="M8 21v-3"></path>
+          <path d="M16 21v-3"></path>
+        </svg>
+      </div>
+      <h3 class="card__title">Topic management</h3>
+      <p class="card__body">{{ topics || 'No message' }}</p>
+    </article>
+
+    <article class="card card--accent-3">
+      <div class="card__icon" aria-hidden="true">
+        <!-- forum icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="card__title">Forum</h3>
+      <p class="card__body">{{ forums || 'No message' }}</p>
+    </article>
+
+    <article class="card card--accent-4">
+      <div class="card__icon" aria-hidden="true">
+        <!-- media icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <path d="M21 15l-5-5-4 4-3-3-4 6"></path>
+        </svg>
+      </div>
+      <h3 class="card__title">Media</h3>
+      <p class="card__body">{{ media || 'No message' }}</p>
+    </article>
+
+    <article class="card card--accent-5">
+      <div class="card__icon" aria-hidden="true">
+        <!-- messages icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="card__title">Private messages</h3>
+      <p class="card__body">{{ messages || 'No message' }}</p>
+    </article>
+
+    <article class="card card--accent-6">
+      <div class="card__icon" aria-hidden="true">
+        <!-- notifications icon -->
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18.6 14.6V11a6 6 0 1 0-12 0v3c0 .736-.293 1.45-.816 1.98L4 17h5"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </div>
+      <h3 class="card__title">Notifications</h3>
+      <p class="card__body">{{ notifications || 'No message' }}</p>
+    </article>
+  </div>
+
+  <footer class="dashboard__footer">
+    <small>Last updated: <time>{{ (now | date:'short') }}</time></small>
+  </footer>
+</section>
+
+<nav>
+  <a (click)="onLoggedOut()">Logout</a>
+</nav>
