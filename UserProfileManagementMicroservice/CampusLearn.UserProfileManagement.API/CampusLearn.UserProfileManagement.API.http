@@ -6,7 +6,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 ###
 
-GET {{route}}/users/migration
+GET {{route}}/migrations/migration
 Accept: application/json
 
 ###

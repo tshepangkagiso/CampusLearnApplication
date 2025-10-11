@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CampusLearn.UserProfileManagement.API.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -178,12 +178,6 @@ namespace CampusLearn.UserProfileManagement.API.Database.Migrations
                 name: "IX_Logins_UserProfileID",
                 table: "Logins",
                 column: "UserProfileID",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Modules_ModuleCode",
-                table: "Modules",
-                column: "ModuleCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(

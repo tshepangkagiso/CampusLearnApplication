@@ -100,9 +100,6 @@ namespace CampusLearn.UserProfileManagement.API.Database.Migrations
 
                     b.HasKey("ModuleID");
 
-                    b.HasIndex("ModuleCode")
-                        .IsUnique();
-
                     b.ToTable("Modules");
                 });
 

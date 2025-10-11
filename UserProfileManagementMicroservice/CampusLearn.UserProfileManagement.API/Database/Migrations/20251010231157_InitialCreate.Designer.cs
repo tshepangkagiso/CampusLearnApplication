@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusLearn.UserProfileManagement.API.Database.Migrations
 {
     [DbContext(typeof(UserManagementDbContext))]
-    [Migration("20251007191201_Init")]
-    partial class Init
+    [Migration("20251010231157_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,9 +102,6 @@ namespace CampusLearn.UserProfileManagement.API.Database.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ModuleID");
-
-                    b.HasIndex("ModuleCode")
-                        .IsUnique();
 
                     b.ToTable("Modules");
                 });

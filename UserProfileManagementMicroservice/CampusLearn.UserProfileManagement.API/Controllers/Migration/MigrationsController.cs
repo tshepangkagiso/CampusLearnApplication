@@ -2,16 +2,25 @@
 
 [Route("[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class MigrationsController(IDataSeeder dataSeeder, UserManagementDbContext context) : ControllerBase
 {
-    private readonly UserManagementDbContext context;
-    public UsersController(UserManagementDbContext context)
+    //http://localhost:6000/migrations/modules
+    //route creates a new database in sqlserver
+    [HttpPost("modules")]
+    public async Task<IActionResult> SeedModules()
     {
-        this.context = context;
+        try
+        {
+            await dataSeeder.SeedModulesAsync();
+            return Ok(new { message = "Modules seeded successfully" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
     }
 
-
-    //http://localhost:6000/users/migration
+    //http://localhost:6000/migrations/migration
     //route creates a new database in sqlserver
     [HttpGet("migration")]
     public IActionResult Get()
@@ -19,17 +28,17 @@ public class UsersController : ControllerBase
         try
         {
             // Check if database exists
-            if (this.context.Database.CanConnect())
+            if (context.Database.CanConnect())
             {
                 Console.WriteLine("Database exists. Applying migrations...");
-                this.context.Database.Migrate();
+                context.Database.Migrate();
                 Console.WriteLine("Migrations applied successfully.");
                 return Ok(new { message = "Migrations applied successfully. To UserProfileDB" });
             }
             else
             {
                 Console.WriteLine("Database does not exist. Creating database and applying migrations...");
-                this.context.Database.Migrate();
+                context.Database.Migrate();
                 Console.WriteLine("Database created and migrations applied successfully.");
                 return BadRequest();
             }
@@ -40,20 +49,4 @@ public class UsersController : ControllerBase
             return BadRequest(new {error = ex.Message.ToString()});
         }
     }
-
-    //http://localhost:6000/users/
-    //route is for testing if api works
-    [HttpGet]
-    public IActionResult GetResponse()
-    {
-        try
-        {
-            return Ok("Hello, This is the users API.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message.ToString()}");
-        }
-    }
-
 }

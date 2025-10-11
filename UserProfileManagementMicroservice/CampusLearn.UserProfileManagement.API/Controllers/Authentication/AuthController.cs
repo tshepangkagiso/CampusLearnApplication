@@ -1,4 +1,6 @@
-﻿namespace CampusLearn.UserProfileManagement.API.Controllers.AuthenticationControllers;
+﻿using System.Security.Cryptography;
+
+namespace CampusLearn.UserProfileManagement.API.Controllers.AuthenticationControllers;
 
 [Route("[controller]")]
 [ApiController]
@@ -20,13 +22,13 @@ public class AuthController : ControllerBase
     //http://localhost:6000/auth/register
     //route handles registration of a user
     [HttpPost("register")]
-    public async Task<IActionResult> OnRegister([FromBody] RegisterRequest request)
+    public async Task<IActionResult> OnRegister([FromBody] Authentication.DTOs.RegisterRequest request)
     {
         try
         {
             // 1. Validate email format and student number match
             var emailParts = request.Email.Split('@');
-            if (emailParts.Length != 2 || !request.Email.EndsWith("@student.belgiumcampus.ac.za"))
+            if (emailParts.Length != 2 || !request.Email.EndsWith("@student.belgiumcampus.ac.za") || !request.Email.EndsWith("@belgiumcampus.ac.za"))
                 return BadRequest("Invalid campus email format");
 
             var emailStudentNumber = emailParts[0];
@@ -106,7 +108,7 @@ public class AuthController : ControllerBase
     //http://localhost:6000/auth/login
     //route handles login
     [HttpPost("login")]
-    public async Task<IActionResult> OnLogin([FromBody] LoginRequest request)
+    public async Task<IActionResult> OnLogin([FromBody] Authentication.DTOs.LoginRequest request)
     {
         try
         {
@@ -220,20 +222,109 @@ public class AuthController : ControllerBase
         }
     }
 
+
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> OnResetPassword([FromBody] Authentication.DTOs.ResetPasswordRequest request)
+    {
+        try
+        {
+            // Validate email format
+            if (!request.Email.EndsWith("@student.belgiumcampus.ac.za"))
+                return BadRequest("Invalid campus email");
+
+            // Find user login
+            var login = await context.Logins
+                .Include(l => l.UserProfile)
+                .FirstOrDefaultAsync(l => l.Email == request.Email);
+
+            if (login == null || !login.IsActive)
+                return BadRequest("User not found");
+
+            string temporaryPassword = GeneratePassword();
+            // Hash new password
+            var (hash, salt) = hashingService.HashPassword(temporaryPassword);
+
+            // Update password
+            login.PasswordHash = hash;
+            login.PasswordSalt = salt;
+            login.LastPasswordChange = DateTime.UtcNow;
+            login.FailedLoginAttempts = 0; // Reset failed attempts
+            login.LockoutEnd = null; // Remove any lockout
+
+            await context.SaveChangesAsync();
+
+            return Ok(new { password = temporaryPassword });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message, ex);
+            return BadRequest("Error resetting password");
+        }
+    }
+
+    [HttpPost("change-password")] //inside the application
+    public async Task<IActionResult> OnChangePassword([FromBody] Authentication.DTOs.ChangePasswordRequest request)
+    {
+        try
+        {
+            // Get current user from JWT token
+            var userId = request.UserID;
+
+            var login = await context.Logins
+                .FirstOrDefaultAsync(l => l.UserProfileID == userId);
+
+            if (login == null || !login.IsActive)
+                return BadRequest("User not found");
+
+            // Verify current password
+            if (!hashingService.VerifyPasswords(request.CurrentPassword, login.PasswordHash))
+                return BadRequest("Current password is incorrect");
+
+            // Hash new password
+            var (hash, salt) = hashingService.HashPassword(request.NewPassword);
+
+            // Update password
+            login.PasswordHash = hash;
+            login.PasswordSalt = salt;
+            login.LastPasswordChange = DateTime.UtcNow;
+
+            await context.SaveChangesAsync();
+
+            return Ok(new { Message = "Password changed successfully" });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message, ex);
+            return BadRequest("Error changing password");
+        }
+    }
+
+
+
+
+
+    private string GeneratePassword(int length = 12)
+    {
+        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+
+        byte[] data = new byte[length];
+        using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(data);
+        }
+
+        char[] password = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            password[i] = chars[data[i] % chars.Length];
+        }
+
+        return new string(password);
+    }
+
 }
 
 
 
-/*
-         try
-        {
-            return BadRequest();
-        }
-        catch(Exception ex)
-        {
-            Log.Logger.Error($"Auth: {ex.Message.ToString()}");
-            return StatusCode(500, "Something went wrong with server");
-        }
-
-*/
 

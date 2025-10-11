@@ -1,15 +1,93 @@
 @route = http://localhost:7000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiIxMjM0NTZAc3R1ZGVudC5iZWxnaXVtY2FtcHVzLmFjLnphIiwianRpIjoiMzNjNGZjZTYtMjJlMC00YzA3LThkMjUtNzlkOWRkZWU4MGQ0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkpvaG4gRG9lIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsIlVzZXJQcm9maWxlSUQiOiIxIiwiU3R1ZGVudE51bWJlciI6IjEyMzQ1NiIsIlF1YWxpZmljYXRpb24iOiJCSVQiLCJGdWxsTmFtZSI6IkpvaG4gRG9lIiwiSXNBY3RpdmUiOiJUcnVlIiwiSXNTdHVkZW50IjoiVHJ1ZSIsIklzVHV0b3IiOiJGYWxzZSIsIklzQWRtaW4iOiJGYWxzZSIsImV4cCI6MTc2MDA5MTc3MCwiaXNzIjoiQ2FtcHVzTGVhcm4uVXNlck1hbmFnZW1lbnQiLCJhdWQiOiJDYW1wdXNMZWFybi5TZXJ2aWNlcyJ9.IMCZ1q_ywEeirY8jIKlsHbsc0deo9rSE-hhD4FIbW9g
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiI3ODkwMTJAc3R1ZGVudC5iZWxnaXVtY2FtcHVzLmFjLnphIiwianRpIjoiZGFhMjdhMGQtNDQyYS00YWQzLWI4ODEtZGIxMjg2ZDg5NmY1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkphbmUgU21pdGgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUdXRvciIsIlVzZXJQcm9maWxlSUQiOiIyIiwiU3R1ZGVudE51bWJlciI6Ijc4OTAxMiIsIlF1YWxpZmljYXRpb24iOiJCQ09NIiwiRnVsbE5hbWUiOiJKYW5lIFNtaXRoIiwiSXNBY3RpdmUiOiJUcnVlIiwiSXNTdHVkZW50IjoiRmFsc2UiLCJJc1R1dG9yIjoiVHJ1ZSIsIklzQWRtaW4iOiJGYWxzZSIsImV4cCI6MTc2MDE1MDMyMCwiaXNzIjoiQ2FtcHVzTGVhcm4uVXNlck1hbmFnZW1lbnQiLCJhdWQiOiJDYW1wdXNMZWFybi5TZXJ2aWNlcyJ9.8T1mt6s1wEI1eQ6VVG4C7ARQuF-IqPDc2mdm6J2yCBA
 
-GET {{route}}/user/users
+
+### Module Subscription Routes:
+
+
+#### Student subscribes to a module
+POST {{route}}/user/subscriptions/module/student/subscribe
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "moduleCode": "PRG171"
+}
+
+#### Student unsubscribes from a module
+POST {{route}}/user/subscriptions/module/student/unsubscribe
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "moduleCode": "WPR171"
+}
+
+#### Get all modules a student is subscribed to
+GET {{route}}/user/subscriptions/module/students/subscribed/1
+Authorization: Bearer {{token}}
+
+#### Get all students subscribed to a specific module
+GET {{route}}/user/subscriptions/module/WPR171/students
+Authorization: Bearer {{token}}
+
+### Tutor Subscription Routes
+
+#### Tutor qualifies for a module
+POST {{route}}/user/subscriptions/module/tutor/subscribe
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "moduleCode": "PRG281"
+}
+
+#### Tutor unqualifies from a module
+POST {{route}}/user/subscriptions/module/tutor/unsubscribe
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "moduleCode": "PRG281"
+}
+
+#### Get all modules a tutor is qualified for
+GET {{route}}/user/subscriptions/module/tutors/subscribed/2
+Authorization: Bearer {{token}}
+
+#### Get all tutors qualified for a specific module
+GET {{route}}/user/subscriptions/module/PRG281/tutors
+Authorization: Bearer {{token}}
+
+
+
+
+
+### Database Migration Routes 
+###
+POST {{route}}/user/migrations/modules
 Accept: application/json
 Authorization: Bearer {{token}}
-###
+Content-Type: application/json
+{
 
-GET {{route}}/user/users/migration
+}
+
+###
+GET {{route}}/user/migrations/migration
 Accept: application/json
 Authorization: Bearer {{token}}
-###
+
+
+
+
+
+
+### Authentication Routes:
 
 ### Register a new Student
 POST {{route}}/authentication/auth/register

@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth-service';
 import { QualificationStringMap } from '../../../Interfaces/enums/qualification';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-component',
@@ -10,6 +11,7 @@ import { QualificationStringMap } from '../../../Interfaces/enums/qualification'
 })
 export class StudentComponent {
   private authService = inject(AuthService);  
+  private router = inject(Router);
 
   public name : string = ''
   public qualification : string = ''
@@ -32,5 +34,11 @@ export class StudentComponent {
 
   onLogout(){
     this.authService.onLogout();
+  }
+
+
+  viewProfile()
+  {
+    this.router.navigate(['/student/profile'])
   }
 }

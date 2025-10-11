@@ -1,8 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add health checks service
-builder.Services.AddHealthChecks();
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserManagementDbContext>(options =>
@@ -27,11 +24,23 @@ builder.Host.UseSerilog();
 //Dependency Injection
 builder.Services.AddSingleton<IHashingService, HashingService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddScoped<IDataSeeder, DataSeeder>();
+
+// Configure MinIO
+builder.Services.AddMinio(configureClient =>
+{
+    configureClient
+        .WithEndpoint("minio", 9000)
+        .WithCredentials(builder.Configuration["MinIO:AccessKey"], builder.Configuration["MinIO:SecretKey"])
+        .WithSSL(false)
+        .Build();
+});
+
+builder.Services.AddScoped<MinioService>();
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
-app.MapHealthChecks("/health");
 
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
@@ -78,6 +87,22 @@ if (app.Environment.IsDevelopment())
         {
             Log.Error($"Database initialization error: {ex.Message}");
         }
+    }
+
+
+
+    // Auto-seed modules on startup
+    using (var scope = app.Services.CreateScope())
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+        await seeder.SeedModulesAsync();
+    }
+
+    //auto-seed users
+    using (var scope = app.Services.CreateScope())
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+        await seeder.SeedUsersAsync();
     }
 }
 

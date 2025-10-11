@@ -62,7 +62,7 @@ onSubmit() {
         }
         else
         {
-          this.router.navigate(['/temp']);
+          this.router.navigate(['/']);
         }
 
       }

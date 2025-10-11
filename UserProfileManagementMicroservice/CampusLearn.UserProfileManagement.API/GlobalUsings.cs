@@ -14,4 +14,11 @@ global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Text;
 
-global using Microsoft.AspNetCore.Authorization;
+global using CampusLearn.UserProfileManagement.API.Database.Module_Data_Seeder;
+global using CampusLearn.UserProfileManagement.API.Controllers.Subscription.DTOs;
+
+global using CampusLearn.UserProfileManagement.API.Controllers.Profile.DTOs;
+global using CampusLearn.UserProfileManagement.API.Services;
+global using Minio;
+global using Minio.DataModel.Args;
+global using Minio.DataModel.Result;

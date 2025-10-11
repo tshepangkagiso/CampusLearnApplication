@@ -39,7 +39,6 @@ services:
       - campuslearn.userprofilemanagement.api    
       - campuslearn.topicsmanagement.api
       - campuslearn.forummanagement.api
-      - campuslearn.mediacontent.api
       - campuslearn.notifications.api
       - campuslearn.privatemessaging.api
 
@@ -60,6 +59,9 @@ services:
       - Jwt__Secret=fe6f0714c5d25fe153c50009d4cd687d
       - Jwt__Issuer=CampusLearn.UserManagement
       - Jwt__Audience=CampusLearn.Services
+      - MinIO__Endpoint=http://minio:9000
+      - MinIO__AccessKey=minioadmin
+      - MinIO__SecretKey=minioadmin123
     ports:
       - "7100:8080"
       #- "7101:8081"
@@ -87,6 +89,9 @@ services:
       - Seq__Url=http://seq:80
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TopicsDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
+      - MinIO__Endpoint=http://minio:9000
+      - MinIO__AccessKey=minioadmin
+      - MinIO__SecretKey=minioadmin123
     ports:
       - "7200:8080"
       #- "7201:8081"
@@ -115,6 +120,9 @@ services:
       - Seq__Url=http://seq:80
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ForumDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
+      - MinIO__Endpoint=http://minio:9000
+      - MinIO__AccessKey=minioadmin
+      - MinIO__SecretKey=minioadmin123
     ports:
       - "7300:8080"
       #- "7301:8081"
@@ -129,31 +137,6 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
-
-  campuslearn.mediacontent.api:
-    image: ${DOCKER_REGISTRY-}campuslearnmediacontentapi
-    build:
-      context: .
-      dockerfile: MediaContentMicroservice/CampusLearn.MediaContent.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      #- ASPNETCORE_HTTPS_PORTS=8081
-      - Seq__Url=http://seq:80
-      - MinIO__Endpoint=http://minio:9000
-      - MinIO__AccessKey=minioadmin
-      - MinIO__SecretKey=minioadmin123
-    ports:
-      - "7400:8080"
-      #- "7401:8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    networks:
-      - campuslearn-network
-    restart: unless-stopped
 
   campuslearn.notifications.api:
     image: ${DOCKER_REGISTRY-}campuslearnnotificationsapi

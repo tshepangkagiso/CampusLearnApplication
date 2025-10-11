@@ -1,3 +1,5 @@
+using Minio;
+
 var builder = WebApplication.CreateBuilder(args);
 // Add health checks service
 builder.Services.AddHealthChecks();
@@ -12,6 +14,7 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
 });
 
 
+
 //configuring logging and logging to Seq
 Log.Logger = new LoggerConfiguration() 
     .MinimumLevel.Debug()
@@ -19,6 +22,18 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Seq(builder.Configuration.GetValue<string>("Seq:Url")??"")
     .CreateLogger();
+
+// Configure MinIO
+builder.Services.AddMinio(configureClient =>
+{
+    configureClient
+        .WithEndpoint("minio", 9000)
+        .WithCredentials(builder.Configuration["MinIO:AccessKey"], builder.Configuration["MinIO:SecretKey"])
+        .WithSSL(false)
+        .Build();
+});
+
+builder.Services.AddScoped<MinioService>();
 
 //swagger configuration
 builder.Services.AddEndpointsApiExplorer();

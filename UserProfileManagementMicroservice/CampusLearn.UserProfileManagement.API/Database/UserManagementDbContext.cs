@@ -47,9 +47,9 @@ public class UserManagementDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         // Module configurations
-        modelBuilder.Entity<Module>()
+        /*modelBuilder.Entity<Module>()
             .HasIndex(m => m.ModuleCode)
-            .IsUnique();
+            .IsUnique();*/
 
         // StudentModule composite key
         modelBuilder.Entity<StudentModule>()
@@ -81,6 +81,9 @@ public class UserManagementDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+
+
+
 
 
 

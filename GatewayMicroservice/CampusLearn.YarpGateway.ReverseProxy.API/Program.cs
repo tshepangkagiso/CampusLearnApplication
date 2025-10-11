@@ -50,14 +50,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-/*// Add Authorization with Policies
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("StudentOnly", policy => policy.RequireRole("Student"));
-    options.AddPolicy("TutorOnly", policy => policy.RequireRole("Tutor", "Admin"));
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-});*/
-
 var app = builder.Build();
 // Only HTTP, skip HTTPS redirect (since Docker is internal HTTP only)
 app.UseCors("ClientApp");
