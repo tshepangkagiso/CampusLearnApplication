@@ -20,6 +20,11 @@ public class QueryTopic
     public bool IsResolved { get; set; } = false;
     public bool IsUrgent { get; set; } = false;
 
+    public int AssignedTutorID { get; set; } 
+    public bool IsAssigned { get; set; }
+    public DateTime AssignedAt { get; set; }
+    public string PrivateChatId { get; set; } = string.Empty;
+
     // Foreign key (reference to User Management service)
     public int StudentID { get; set; }
 

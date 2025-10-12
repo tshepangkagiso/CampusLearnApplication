@@ -150,7 +150,7 @@ services:
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
       - Seq__Url=http://seq:80
     ports:
-      - "7500:8080"
+      - "7400:8080"
       #- "7501:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
@@ -173,7 +173,7 @@ services:
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
       - Seq__Url=http://seq:80
     ports:
-      - "7600:8080"
+      - "7500:8080"
       #- "7601:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro

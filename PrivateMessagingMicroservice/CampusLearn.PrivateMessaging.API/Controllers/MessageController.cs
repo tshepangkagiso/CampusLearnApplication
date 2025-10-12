@@ -1,48 +1,33 @@
-﻿namespace CampusLearn.PrivateMessaging.API.Controllers;
+﻿using CampusLearn.PrivateMessaging.API.RabbitMQ;
+using System;
+
+namespace CampusLearn.PrivateMessaging.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
 public class MessageController : ControllerBase
 {
+
+    //Returns all messages currently in the in-memory queue(safe copy).
     [HttpGet]
-    public IActionResult GetResponse()
+    public IActionResult GetMessages()
     {
-        try
+        // Convert queue to list for API response
+        var messages = InternalQueue.Messages.ToList();
+        return Ok(messages);
+    }
+
+
+    //Pops one message off the queue(FIFO) for processing.
+    [HttpGet("next")]
+    public IActionResult GetNextMessage()
+    {
+        if (InternalQueue.Messages.TryDequeue(out var message))
         {
-            return Ok("Hello, This is the Messages API.");
+            return Ok(message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message.ToString()}");
-        }
+        return NotFound("No messages available");
     }
 }
 
 
-public class CounterHub : Hub
-{
-    private static int _counter = 0;
-
-    public async Task IncrementCounter()
-    {
-        _counter++;
-        await Clients.All.SendAsync("CounterUpdated", _counter);
-    }
-
-    public async Task DecrementCounter()
-    {
-        _counter--;
-        await Clients.All.SendAsync("CounterUpdated", _counter);
-    }
-
-    public async Task ResetCounter()
-    {
-        _counter = 0;
-        await Clients.All.SendAsync("CounterUpdated", _counter);
-    }
-
-    public async Task GetCurrentCount()
-    {
-        await Clients.Caller.SendAsync("CounterUpdated", _counter);
-    }
-}

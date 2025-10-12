@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusLearn.TopicsManagement.API.Database.Migrations
 {
     [DbContext(typeof(TopicsDbContext))]
-    [Migration("20251004010606_InitialCreate")]
+    [Migration("20251012175513_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -113,6 +113,15 @@ namespace CampusLearn.TopicsManagement.API.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QueryTopicID"));
 
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("AssignedTutorID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsResolved")
                         .HasColumnType("bit");
 
@@ -121,6 +130,10 @@ namespace CampusLearn.TopicsManagement.API.Database.Migrations
 
                     b.Property<DateTime?>("LastActivity")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PrivateChatId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("QueryTopicDescription")
                         .IsRequired()

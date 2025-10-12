@@ -3,10 +3,11 @@ global using Microsoft.EntityFrameworkCore;
 global using CampusLearn.TopicsManagement.API.Database;
 global using Serilog;
 
-global using CampusLearn.Code.Library.RabbitMQ.TopicRabbitMQ;
-global using MassTransit;
-
 global using Microsoft.AspNetCore.Mvc;
-global using Amazon.S3;
-global using Amazon.S3.Model;
 global using CampusLearn.TopicsManagement.API.Services;
+
+global using CampusLearn.TopicsManagement.API.RabbitMQ;
+global using Minio;
+global using RabbitMQ.Client;
+global using System.Text;
+global using System.Text.Json;

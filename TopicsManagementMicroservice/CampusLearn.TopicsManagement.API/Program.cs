@@ -1,17 +1,13 @@
-using Minio;
-
 var builder = WebApplication.CreateBuilder(args);
-// Add health checks service
-builder.Services.AddHealthChecks();
-
 builder.Services.AddControllers();
-// Add services to the container.
+
 //configuring database
 builder.Services.AddDbContext<TopicsDbContext>(options =>
 {
     //options.UseSqlServer(builder.Configuration.GetConnectionString("LocalTestConnection")); // for local ssms
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); //connecting to docker db
 });
+
 
 //configuring logging and logging to Seq
 Log.Logger = new LoggerConfiguration() 
@@ -38,33 +34,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog();
 
+
 //rabbitmq configuration
-builder.Services.AddScoped<IMessageStoreTopic, MessageStoreTopic>();
-builder.Services.AddScoped<ITopicMessagePublisher, TopicMessagePublisher>();
-builder.Services.AddMassTransit(options =>
-{
-    options.AddConsumer<TopicMessageConsumer>();
+builder.Services.AddSingleton<RabbitMqPublisher>();
 
-    options.UsingRabbitMq((context, config) =>
-    {
-        var rabbitMqConnection = builder.Configuration["ConnectionStrings:RabbitMQ"];
-
-        config.Host(new Uri(rabbitMqConnection), host => { });
-
-        config.ReceiveEndpoint("topic-queue", e =>
-        {
-            e.ConfigureConsumer<TopicMessageConsumer>(context);
-            e.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(10)));
-            e.BindDeadLetterQueue("topic-queue-error");
-        });
-    });
-});
 
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 
-app.MapHealthChecks("/health");
 
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
@@ -118,8 +96,3 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
-
-/*
-    # "https://localhost:6101;http://localhost:6100" - ports of this api
-    # "http://localhost:6100/swagger" - route to open swagger documentation
- */

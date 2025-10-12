@@ -2,7 +2,7 @@
 
 [Route("[controller]")]
 [ApiController]
-public class TopicController(TopicsDbContext context,ITopicMessagePublisher publisher, MinioService minio) : ControllerBase
+public class TopicController(TopicsDbContext context,MinioService minio) : ControllerBase
 {
 
     [HttpGet("migration")]
@@ -33,21 +33,6 @@ public class TopicController(TopicsDbContext context,ITopicMessagePublisher publ
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetResponse()
-    {
-        try
-        {
-            NewTopicMessage message = new NewTopicMessage("Topic", "First Attempt From Topic");
-            await publisher.PublishNewTopicMessageAsync(message);
-
-            return Ok("Hello, This is the Topics API.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message.ToString()}");
-        }
-    }
 
 
     [HttpGet("buckets")]

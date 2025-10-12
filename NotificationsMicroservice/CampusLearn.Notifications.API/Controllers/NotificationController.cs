@@ -1,56 +1,53 @@
-﻿namespace CampusLearn.Notification.API.Controllers;
+﻿using CampusLearn.Notifications.API.RabbitMQ;
+using CampusLearn.Notifications.API.RabbitMQ.Forum_MessageQ;
+
+namespace CampusLearn.Notification.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
 public class NotificationController : ControllerBase
 {
-    private readonly IMessageStoreForum messageStoreForum;
-    private readonly IMessageStoreTopic messageStoreTopic;
 
-    public NotificationController(IMessageStoreForum messageStoreForum, IMessageStoreTopic messageStoreTopic)
-    {
-        this.messageStoreForum = messageStoreForum;
-        this.messageStoreTopic = messageStoreTopic;
-    }
-
-    [HttpGet]
-    public IActionResult GetResponse()
-    {
-        try
-        {
-            return Ok("Hello, This is the Notifications API.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message.ToString()}");
-        }
-    }
-
+    //Returns all messages currently in the in-memory queue(safe copy).
     [HttpGet("topic")]
-    public async Task<IActionResult> GetTopicMessages()
+    public IActionResult GetMessagesTopic()
     {
-        try
-        {
-            var topicMessages = await this.messageStoreTopic.GetTopicMessagesAsync(); ;
-            return Ok(topicMessages);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { error = ex.Message });
-        }
+        // Convert queue to list for API response
+        var messages = InternalTopicQueue.Messages.ToList();
+        return Ok(messages);
     }
 
-    [HttpGet("forum")]
-    public async Task<IActionResult> GetForumMessages()
+
+    //Pops one message off the queue(FIFO) for processing.
+    [HttpGet("next-topic")]
+    public IActionResult GetNextMessageTopic()
     {
-        try
+        if (InternalTopicQueue.Messages.TryDequeue(out var message))
         {
-            var topicMessages = await this.messageStoreForum.GetForumMessagesAsync();
-            return Ok(topicMessages);
+            return Ok(message);
         }
-        catch (Exception ex)
+        return NotFound("No messages available");
+    }
+
+
+    //Returns all messages currently in the in-memory queue(safe copy).
+    [HttpGet("forum")]
+    public IActionResult GetMessagesForum()
+    {
+        // Convert queue to list for API response
+        var messages = InternalForumQueue.Messages.ToList();
+        return Ok(messages);
+    }
+
+
+    //Pops one message off the queue(FIFO) for processing.
+    [HttpGet("next-forum")]
+    public IActionResult GetNextMessageForum()
+    {
+        if (InternalForumQueue.Messages.TryDequeue(out var message))
         {
-            return StatusCode(500, new { error = ex.Message });
+            return Ok(message);
         }
+        return NotFound("No messages available");
     }
 }

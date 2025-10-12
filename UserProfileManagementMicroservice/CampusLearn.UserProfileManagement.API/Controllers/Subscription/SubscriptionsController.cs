@@ -127,7 +127,51 @@ public class SubscriptionsController(UserManagementDbContext context) : Controll
             return BadRequest();
         }
     }
+    //all modules student is not subscribed to
+    [HttpGet("module/students/notsubscribed/{userId}")]
+    public async Task<IActionResult> OnStudentsNotSubscribed([FromRoute] int userId)
+    {
+        try
+        {
+            var student = await context.Students
+                .Include(s => s.UserProfile)
+                .FirstOrDefaultAsync(s => s.UserProfileID == userId);
 
+            if (student == null) return BadRequest("Student not found");
+
+            // Get all modules the student IS subscribed to (to exclude them)
+            var subscribedModuleIds = await context.StudentModules
+                .Where(sm => sm.StudentID == student.StudentID)
+                .Select(sm => sm.ModuleID)
+                .ToListAsync();
+
+            // Get all modules NOT subscribed to that match student's qualification
+            var notSubscribedModules = await context.Modules
+                .Where(m => m.ProgramType == student.UserProfile.Qualification &&
+                           !subscribedModuleIds.Contains(m.ModuleID))
+                .Select(m => new
+                {
+                    ModuleID = m.ModuleID,
+                    ModuleCode = m.ModuleCode,
+                    ModuleName = m.ModuleName,
+                    ProgramType = m.ProgramType,
+                    Description = m.Description
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                Student = $"{student.UserProfile.Name} {student.UserProfile.Surname}",
+                NotSubscribedModules = notSubscribedModules,
+                TotalAvailable = notSubscribedModules.Count
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message, ex);
+            return BadRequest();
+        }
+    }
 
     // Get all students subscribed to a particular module
     [HttpGet("module/{moduleCode}/students")]

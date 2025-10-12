@@ -44,6 +44,10 @@ namespace CampusLearn.TopicsManagement.API.Database.Migrations
                     LastActivity = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsResolved = table.Column<bool>(type: "bit", nullable: false),
                     IsUrgent = table.Column<bool>(type: "bit", nullable: false),
+                    AssignedTutorID = table.Column<int>(type: "int", nullable: false),
+                    IsAssigned = table.Column<bool>(type: "bit", nullable: false),
+                    AssignedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PrivateChatId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

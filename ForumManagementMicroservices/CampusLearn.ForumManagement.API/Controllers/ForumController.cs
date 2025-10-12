@@ -1,51 +1,26 @@
-﻿namespace CampusLearn.ForumManagement.API.Controllers;
+﻿using CampusLearn.Code.Library.RabbitMQ.ForumRabbitMQ;
+using CampusLearn.ForumManagement.API.RabbitMQ;
+
+namespace CampusLearn.ForumManagement.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
 
-public class ForumController(ForumDbContext context, IForumMessagePublisher publisher,MinioService minio) : ControllerBase
+public class ForumController(ForumDbContext context,MinioService minio, RabbitMqPublisher publisher) : ControllerBase
 {
-    [HttpGet("migration")]
-    public IActionResult Get()
+    [HttpPost("rabbitmq-publish")]
+    public async Task<IActionResult> OnPublish([FromBody] NewForumMessage message)
     {
         try
         {
-            // Check if database exists
-            if (context.Database.CanConnect())
-            {
-                Console.WriteLine("Database exists. Applying migrations...");
-                context.Database.Migrate();
-                Console.WriteLine("Migrations applied successfully.");
-                return Ok(new { message = "Migrations applied successfully. To ForumDB"});
-            }
-            else
-            {
-                Console.WriteLine("Database does not exist. Creating database and applying migrations...");
-                context.Database.Migrate();
-                Console.WriteLine("Database created and migrations applied successfully.");
-                return BadRequest();
-            }
+            if (message == null) return BadRequest("Empty message");
+            var response = await publisher.Publish(message);
+            return Ok(new { message = message, response = response });
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message.ToString(), "An error occurred while migrating the database.");
-            return BadRequest(new { error = ex.Message.ToString() });
-        }
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetResponse()
-    {
-        try
-        {
-            NewForumMessage message = new NewForumMessage("Forum", "First Attempt From Forum");
-            await publisher.PublishNewForumMessageAsync(message);
-
-            return Ok("Hello, This is the forum API.");
-        }
-        catch(Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message.ToString()}");
+            Log.Error(ex, "Failed to publish");
+            return BadRequest($"Failed to publish: {ex.Message}");
         }
     }
 
