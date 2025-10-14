@@ -1,9 +1,13 @@
-﻿namespace CampusLearn.Notifications.API.RabbitMQ;
+﻿using CampusLearn.Notifications.API.Services.Email;
 
-public class TopicConsumerService : BackgroundService
+namespace CampusLearn.Notifications.API.RabbitMQ;
+
+public class TopicConsumerService(IServiceProvider serviceProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await RabbitMqTopicConsumer.StartAsync();
+        using var scope = serviceProvider.CreateScope();
+        var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+        await RabbitMqTopicConsumer.StartAsync(emailService);
     }
 }

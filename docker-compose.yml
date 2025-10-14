@@ -171,6 +171,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       #- ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PrivateMessagesDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Connect Timeout=30;
       - Seq__Url=http://seq:80
     ports:
       - "7500:8080"
@@ -183,6 +184,9 @@ services:
     networks:
       - campuslearn-network
     restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
   # ----------------------------
   # Logging

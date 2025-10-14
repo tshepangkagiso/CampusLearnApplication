@@ -1,4 +1,5 @@
 ﻿using CampusLearn.Code.Library.RabbitMQ.TopicRabbitMQ;
+using CampusLearn.Notifications.API.Services.Email;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -11,7 +12,7 @@ public class RabbitMqTopicConsumer
     private const string ExchangeName = "topics_fanout";
     private const string QueueName = "topic_queue_a";
 
-    public static async Task StartAsync()
+    public static async Task StartAsync(IEmailService emailService)
     {
         var factory = new ConnectionFactory
         {
@@ -38,13 +39,16 @@ public class RabbitMqTopicConsumer
             // Deserialize message
             var message = JsonSerializer.Deserialize<NewTopicMessage>(messageJson);
 
+            // 🔹 Do something with the message
             if (message != null)
             {
-                Console.WriteLine($"[Notifications API] Received Query: {message.QueryId}, Title: {message.Title}, Tutor: {message.TutorId}");
-
-                // 🔹 Do something with the message
                 InternalTopicQueue.Messages.Enqueue(message);
-                // e.g., save to another DB, trigger email, etc.
+
+                string to = "578012@student.belgiumcampus.ac.za";
+                string emailSubject = message.Title;
+                string emaiBody = $"New topic has been created for the module you subscribed too with code: {message.ModuleCode}";
+
+                await emailService.SendEmailAsync(to, emailSubject, emaiBody);
             }
 
             // 3️. Acknowledge the message

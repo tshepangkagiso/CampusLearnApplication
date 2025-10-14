@@ -1,4 +1,5 @@
 ﻿using CampusLearn.Code.Library.RabbitMQ.ForumRabbitMQ;
+using CampusLearn.Notifications.API.Services.Email;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -13,7 +14,7 @@ public class RabbitMqForumConsumer
     private const string ExchangeName = "forum_fanout";
     private const string QueueName = "forum_queue";
 
-    public static async Task StartAsync()
+    public static async Task StartAsync(IEmailService emailService)
     {
         var factory = new ConnectionFactory
         {
@@ -40,11 +41,16 @@ public class RabbitMqForumConsumer
             // Deserialize message
             var message = JsonSerializer.Deserialize<NewForumMessage>(messageJson);
 
+            // 🔹 Do something with the message
             if (message != null)
-            { 
-                // 🔹 Do something with the message
+            {       
                 InternalForumQueue.Messages.Enqueue(message);
-                // e.g., save to another DB, trigger email, etc.
+
+                string to = "578012@student.belgiumcampus.ac.za";
+                string emailSubject = message.Title;
+                string emaiBody = $"New forum has been created for the module you subscribed too with code: {message.ModuleCode}";
+
+                await emailService.SendEmailAsync(to, emailSubject, emaiBody);
             }
 
             // 3️. Acknowledge the message

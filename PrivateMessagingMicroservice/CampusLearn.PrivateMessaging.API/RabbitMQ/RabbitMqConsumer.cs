@@ -1,19 +1,18 @@
 ﻿using CampusLearn.Code.Library.RabbitMQ.TopicRabbitMQ;
+using CampusLearn.PrivateMessaging.API.Signal_R.ChatRoomService;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
 namespace CampusLearn.PrivateMessaging.API.RabbitMQ;
-public class RabbitMqConsumer
+public class RabbitMqConsumer()
 {
-
     private const string ExchangeName = "topics_fanout";
     private const string HostName = "rabbitmq";
     private const string QueueName = "topic_queue_b";
 
-
-    public static async Task StartAsync()
+    public static async Task StartAsync(IChatRoomService chatRoomService)
     {
         var factory = new ConnectionFactory
         {
@@ -42,11 +41,10 @@ public class RabbitMqConsumer
 
             if (message != null)
             {
-                Console.WriteLine($"[Private Messages API] Received Query: {message.QueryId}, Title: {message.Title}, Tutor: {message.TutorId}");
-
                 // 🔹 Do something with the message
                 InternalQueue.Messages.Enqueue(message);
-                // e.g., save to another DB, trigger email, etc.
+                await chatRoomService.GetOrCreateChatRoomAsync(message);
+
             }
 
             // 3️. Acknowledge the message
@@ -62,6 +60,15 @@ public class RabbitMqConsumer
         await Task.Delay(Timeout.Infinite);
     }
 }
+
+
+
+
+
+
+
+
+
 /*
     Fanout Exchange → If multiple consumers are bound to the same exchange with different queues, each gets its own copy of the message.
 

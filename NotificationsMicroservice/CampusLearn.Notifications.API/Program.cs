@@ -1,5 +1,6 @@
 using CampusLearn.Notifications.API.RabbitMQ;
 using CampusLearn.Notifications.API.RabbitMQ.Forum_MessageQ;
+using CampusLearn.Notifications.API.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -21,6 +22,8 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
+builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddHostedService<TopicConsumerService>();
 builder.Services.AddHostedService<ForumConsumerService>();
 

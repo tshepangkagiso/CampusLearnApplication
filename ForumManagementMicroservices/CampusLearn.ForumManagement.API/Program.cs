@@ -1,10 +1,15 @@
 using CampusLearn.ForumManagement.API.RabbitMQ;
 using Minio;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 // Add services to the container.
 //configuring database
 builder.Services.AddDbContext<ForumDbContext>(options =>

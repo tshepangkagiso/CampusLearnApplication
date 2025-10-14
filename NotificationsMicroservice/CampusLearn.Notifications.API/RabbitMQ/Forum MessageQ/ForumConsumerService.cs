@@ -1,10 +1,14 @@
-﻿namespace CampusLearn.Notifications.API.RabbitMQ.Forum_MessageQ;
+﻿using CampusLearn.Notifications.API.Services.Email;
 
-public class ForumConsumerService : BackgroundService
+namespace CampusLearn.Notifications.API.RabbitMQ.Forum_MessageQ;
+
+public class ForumConsumerService(IServiceProvider serviceProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await RabbitMqForumConsumer.StartAsync();
+        using var scope = serviceProvider.CreateScope();
+        var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+        await RabbitMqForumConsumer.StartAsync(emailService);
     }
 }
 
