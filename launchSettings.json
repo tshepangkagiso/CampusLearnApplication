@@ -10,7 +10,8 @@
         "campuslearn.privatemessaging.api": "StartDebugging",
         "campuslearn.notifications.api": "StartDebugging",
         "campuslearn.mediacontent.api": "StartDebugging",
-        "campuslearn.forummanagement.api": "StartDebugging"
+        "campuslearn.forummanagement.api": "StartDebugging",
+        "campuslearn.chatbot.api": "StartDebugging"
       }
     }
   }

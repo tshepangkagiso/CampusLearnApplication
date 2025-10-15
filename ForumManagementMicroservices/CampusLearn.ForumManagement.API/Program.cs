@@ -51,8 +51,6 @@ builder.Services.AddSingleton<RabbitMqPublisher>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 
-
-
 //run swagger in development mode
 if (app.Environment.IsDevelopment())
 {

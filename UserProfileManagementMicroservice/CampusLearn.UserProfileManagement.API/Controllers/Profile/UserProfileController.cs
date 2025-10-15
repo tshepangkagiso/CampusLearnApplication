@@ -160,65 +160,57 @@ public class UserProfileController(UserManagementDbContext context, MinioService
         }
     }
 
-    //testing routes:
-
-
-    [HttpGet("buckets")]
-    public async Task<IActionResult> GetBuckets()
+    [HttpGet("modules/{moduleCode}/assigned-tutor")]
+    public async Task<IActionResult> GetRandomTutorForModule([FromRoute] string moduleCode)
     {
         try
         {
-            var buckets = await minio.ListBucketsAsync();
-            return Ok(buckets);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Failed to get buckets");
-            return BadRequest($"Failed to get buckets: {ex.Message}");
-        }
-    }
+            // Get all tutors qualified for this module
+            var qualifiedTutors = await context.TutorModules
+                .Where(tm => tm.Module.ModuleCode == moduleCode && tm.IsActive)
+                .Include(tm => tm.Tutor)
+                .ThenInclude(t => t.UserProfile)
+                .Select(tm => new
+                {
+                    tm.Tutor.TutorID,
+                    tm.Tutor.UserProfile.Name,
+                    tm.Tutor.UserProfile.Surname,
+                    tm.Tutor.UserProfile.Email,
+                    tm.QualifiedSince
+                })
+                .ToListAsync();
 
-    [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
-    {
-        try
-        {
-            Console.WriteLine($"Upload request received. File: {file?.FileName}, Size: {file?.Length}");
-
-            if (file == null || file.Length == 0)
+            if (!qualifiedTutors.Any())
             {
-                Console.WriteLine("No file or empty file provided");
-                return BadRequest("No file provided");
+                return NotFound(new { Message = $"No tutors found for module {moduleCode}" });
             }
 
-            // Validate file size
-            if (file.Length > 100 * 1024 * 1024) // 100MB limit
+            // If only one tutor, return that one
+            if (qualifiedTutors.Count == 1)
             {
-                Console.WriteLine($"File size {file.Length} exceeds limit");
-                return BadRequest("File size exceeds limit");
+                var tutor = qualifiedTutors[0];
+                return Ok(new
+                {
+                    Message = "Only one tutor available",
+                    Tutor = tutor
+                });
             }
 
-            var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-            Console.WriteLine($"Generated filename: {uniqueFileName}");
+            // If multiple tutors, return random one
+            var random = new Random();
+            var randomIndex = random.Next(qualifiedTutors.Count);
+            var selectedTutor = qualifiedTutors[randomIndex];
 
-            using Stream data = file.OpenReadStream();
-            Console.WriteLine($"Stream created. CanRead: {data.CanRead}, Length: {data.Length}");
-
-            await minio.UploadFileAsync(uniqueFileName, data, file.ContentType);
-            Console.WriteLine("File uploaded successfully");
             return Ok(new
             {
-                Message = "File successfully uploaded",
-                FileName = uniqueFileName,
-                OriginalName = file.FileName,
-                Size = file.Length
+                Message = $"Randomly selected from {qualifiedTutors.Count} tutors",
+                Tutor = selectedTutor
             });
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Controller exception: {ex.Message}");
-            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-            return BadRequest($"Failed to upload file: {ex.Message}");
+            Log.Error($"Failed to get random tutor for module {moduleCode}", ex);
+            return BadRequest(new { Message = "Failed to get random tutor" });
         }
     }
 }
