@@ -114,7 +114,7 @@ public class AuthController : ControllerBase
         {
             // 1. Validate email format
             if (!request.Email.EndsWith("@student.belgiumcampus.ac.za") && !request.Email.EndsWith("@belgiumcampus.ac.za"))
-                return Unauthorized("Invalid campus email");
+                return Unauthorized("Invalid campus email.");
 
             // 2. Find user login
             var login = await this.context.Logins
