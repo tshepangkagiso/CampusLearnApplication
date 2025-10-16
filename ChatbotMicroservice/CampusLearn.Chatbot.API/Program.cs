@@ -1,36 +1,54 @@
-var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
+using Microsoft.AspNetCore.HttpOverrides;
 
+var builder = WebApplication.CreateBuilder(args);
+
+// Services
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<AgentSettings>(builder.Configuration.GetSection("AgentSettings"));
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var allowedOrigins = new[]
+{
+	"http://campuslearn.yarpgateway.reverseproxy.api:8080",
+	"http://localhost:7000",
+    "http://localhost:8080"    
+};
 
-// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Yarp", policy =>
-    {
-        policy.WithOrigins("http://campuslearn.yarpgateway.reverseproxy.api:8080", "http://localhost:7000")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+	options.AddPolicy("Yarp", policy =>
+	{
+		policy.WithOrigins(allowedOrigins)
+			  .AllowAnyHeader()
+			  .AllowAnyMethod();
+	});
+});
+
+builder.Services.Configure<ForwardedHeadersOptions>(opts =>
+{
+	opts.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
 });
 
 var app = builder.Build();
-// Configure the HTTP request pipeline.
+
+app.UseForwardedHeaders();
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
 app.UseCors("Yarp");
+
 if (app.Environment.IsDevelopment())
 {
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
