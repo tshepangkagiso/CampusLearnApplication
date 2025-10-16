@@ -1,4 +1,4 @@
-@CampusLearn.Chatbot.API_HostAddress = http://localhost:7600
+@CampusLearn.Chatbot.API_HostAddress = http://localhost:6700
 
 POST {{CampusLearn.Chatbot.API_HostAddress}}/chatbot
 Content-Type: application/json
