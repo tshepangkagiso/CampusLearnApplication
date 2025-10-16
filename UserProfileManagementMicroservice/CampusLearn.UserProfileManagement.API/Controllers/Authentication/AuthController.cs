@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
         {
             // 1. Validate email format and student number match
             var emailParts = request.Email.Split('@');
-            if (emailParts.Length != 2 || !request.Email.EndsWith("@student.belgiumcampus.ac.za") || !request.Email.EndsWith("@belgiumcampus.ac.za"))
+            if (emailParts.Length != 2 || !request.Email.EndsWith("@student.belgiumcampus.ac.za") && !request.Email.EndsWith("@belgiumcampus.ac.za"))
                 return BadRequest("Invalid campus email format");
 
             var emailStudentNumber = emailParts[0];
@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
         try
         {
             // 1. Validate email format
-            if (!request.Email.EndsWith("@student.belgiumcampus.ac.za"))
+            if (!request.Email.EndsWith("@student.belgiumcampus.ac.za") && !request.Email.EndsWith("@belgiumcampus.ac.za"))
                 return Unauthorized("Invalid campus email");
 
             // 2. Find user login
