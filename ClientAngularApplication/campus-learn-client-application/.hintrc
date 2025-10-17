@@ -8,9 +8,11 @@
       "default",
       {
         "ignore": [
-          "backdrop-filter"
+          "backdrop-filter",
+          "min-height: auto"
         ]
       }
-    ]
+    ],
+    "no-inline-styles": "off"
   }
 }

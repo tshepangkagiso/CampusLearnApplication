@@ -1,8 +1,10 @@
+/* Base styles */
 body {
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f6fa;
+  min-height: 100vh;
 }
 
 .login-container {
@@ -10,7 +12,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 form {
@@ -18,13 +22,16 @@ form {
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 h1 {
   margin-bottom: 1.5rem;
   color: #2c3e50;
+  font-size: 1.5rem;
 }
 
 .form-group {
@@ -37,16 +44,18 @@ label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #333;
+  font-size: 0.9rem;
 }
 
 input[type="text"],
 input[type="password"] {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: border-color 0.2s;
 }
 
 input:focus {
@@ -56,52 +65,7 @@ input:focus {
 
 .btn-primary {
   width: 100%;
-  padding: 0.7rem;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #2980b9;
-}
-
-.message {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-}
-
-.error {
-  color: #e74c3c;
-}
-
-.register-link {
-  margin-top: 1.5rem;
-}
-
-.register-link p {
-  margin: 0;
-  color: #555;
-}
-
-.btn-secondary {
-  display: inline-block;
-  margin-top: 0.5rem;
-  color: #3498db;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.btn-secondary:hover {
-  text-decoration: underline;
-}
-.btn-primary {
-  width: 100%;
-  padding: 0.7rem;
+  padding: 0.75rem;
   background-color: #3498db;
   color: white;
   border: none;
@@ -112,6 +76,7 @@ input:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 44px; /* Better touch targets */
 }
 
 .btn-primary:hover {
@@ -139,5 +104,213 @@ input:focus {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.message {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+.register-link {
+  margin-top: 1.5rem;
+}
+
+.register-link p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.btn-secondary {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.btn-secondary:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Devices (up to 767px) */
+@media screen and (max-width: 767px) {
+  .login-container {
+    padding: 0.5rem;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+
+  form {
+    padding: 1.5rem;
+    max-width: 280px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.7rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .btn-primary {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .register-link p {
+    font-size: 0.85rem;
+  }
+
+  .btn-secondary {
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablet Devices (768px to 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .login-container {
+    padding: 2rem;
+  }
+
+  form {
+    max-width: 400px;
+    padding: 2.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-primary {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  label {
+    font-size: 1rem;
+  }
+}
+
+/* Desktop Devices (1025px and up) */
+@media screen and (min-width: 1025px) {
+  .login-container {
+    padding: 2rem;
+  }
+
+  form {
+    max-width: 420px;
+    padding: 3rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.9rem;
+  }
+
+  .btn-primary {
+    padding: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+}
+
+/* Large Desktop Screens (1440px and up) */
+@media screen and (min-width: 1440px) {
+  form {
+    max-width: 450px;
+    padding: 3.5rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* Very small mobile devices (up to 360px) */
+@media screen and (max-width: 360px) {
+  .login-container {
+    padding: 0.25rem;
+    padding-top: 1rem;
+  }
+
+  form {
+    padding: 1.25rem;
+    max-width: 260px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.6rem;
+  }
+
+  .btn-primary {
+    padding: 0.7rem;
+  }
+}
+
+/* Landscape mode for mobile */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .login-container {
+    justify-content: flex-start;
+    padding-top: 1rem;
+    min-height: auto;
+  }
+
+  form {
+    margin: 1rem 0;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .spinner {
+    border-width: 2px;
   }
 }

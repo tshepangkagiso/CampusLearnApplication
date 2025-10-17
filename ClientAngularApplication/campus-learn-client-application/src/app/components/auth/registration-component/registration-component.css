@@ -1,8 +1,10 @@
+/* Base styles */
 body {
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f6fa;
+  min-height: 100vh;
 }
 
 .register-container {
@@ -10,7 +12,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 form {
@@ -18,25 +22,29 @@ form {
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 h1 {
   margin-bottom: 1.5rem;
   color: #2c3e50;
+  font-size: 1.5rem;
 }
 
 .form-row {
   display: flex;
-  justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .form-group {
   margin-bottom: 1.2rem;
   text-align: left;
   flex: 1;
+  min-width: 0; /* Prevents flex items from overflowing */
 }
 
 label {
@@ -44,6 +52,7 @@ label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #333;
+  font-size: 0.9rem;
 }
 
 input[type="text"],
@@ -52,11 +61,13 @@ input[type="password"],
 input[type="number"],
 select {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: border-color 0.2s;
+  font-family: inherit;
 }
 
 input:focus,
@@ -67,7 +78,7 @@ select:focus {
 
 .btn-primary {
   width: 100%;
-  padding: 0.7rem;
+  padding: 0.75rem;
   background-color: #3498db;
   color: white;
   border: none;
@@ -78,6 +89,7 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 44px;
 }
 
 .btn-primary:hover {
@@ -89,6 +101,7 @@ select:focus {
   cursor: not-allowed;
 }
 
+/* Spinner animation */
 .spinner {
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top: 3px solid #fff;
@@ -110,6 +123,7 @@ select:focus {
 .message {
   margin-top: 1rem;
   font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .error {
@@ -123,6 +137,7 @@ select:focus {
 .login-link p {
   margin: 0;
   color: #555;
+  font-size: 0.9rem;
 }
 
 .btn-secondary {
@@ -131,8 +146,235 @@ select:focus {
   color: #3498db;
   text-decoration: none;
   font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem;
 }
 
 .btn-secondary:hover {
   text-decoration: underline;
+}
+
+/* Mobile Devices (up to 767px) */
+@media screen and (max-width: 767px) {
+  .register-container {
+    padding: 0.5rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+
+  form {
+    padding: 1.5rem;
+    max-width: 320px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    padding: 0.7rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .btn-primary {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .login-link p {
+    font-size: 0.85rem;
+  }
+
+  .btn-secondary {
+    font-size: 0.85rem;
+  }
+}
+
+/* Small Mobile Devices (up to 360px) */
+@media screen and (max-width: 360px) {
+  .register-container {
+    padding: 0.25rem;
+    padding-top: 0.5rem;
+  }
+
+  form {
+    padding: 1.25rem;
+    max-width: 280px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    padding: 0.6rem;
+  }
+
+  .btn-primary {
+    padding: 0.7rem;
+  }
+}
+
+/* Tablet Devices (768px to 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .register-container {
+    padding: 2rem;
+  }
+
+  form {
+    max-width: 450px;
+    padding: 2.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-primary {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  label {
+    font-size: 1rem;
+  }
+}
+
+/* Desktop Devices (1025px and up) */
+@media screen and (min-width: 1025px) {
+  .register-container {
+    padding: 2rem;
+  }
+
+  form {
+    max-width: 420px;
+    padding: 2.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    padding: 0.9rem;
+  }
+
+  .btn-primary {
+    padding: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+}
+
+/* Large Desktop Screens (1440px and up) */
+@media screen and (min-width: 1440px) {
+  form {
+    max-width: 480px;
+    padding: 3rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* Landscape mode for mobile */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  .register-container {
+    justify-content: flex-start;
+    padding-top: 1rem;
+    min-height: auto;
+  }
+
+  form {
+    margin: 1rem 0;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .form-row {
+    flex-direction: row; /* Keep side-by-side in landscape */
+  }
+}
+
+/* Very short screens in landscape */
+@media screen and (max-height: 400px) and (orientation: landscape) {
+  form {
+    padding: 1rem;
+    max-height: 85vh;
+  }
+
+  .form-group {
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .spinner {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 1.5s;
+  }
+  
+  .btn-primary {
+    transition: none;
+  }
 }
