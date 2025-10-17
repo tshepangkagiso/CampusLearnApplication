@@ -91,7 +91,6 @@ public class ChatbotService(HttpClient client, IOptions<AgentSettings> options) 
         }
         catch (JsonException ex)
         {
-            // Log the error and return raw response for debugging
             Console.WriteLine($"JSON parsing error: {ex.Message}");
             return responseContent;
         }
