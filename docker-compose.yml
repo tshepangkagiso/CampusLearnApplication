@@ -41,6 +41,7 @@ services:
       - campuslearn.forummanagement.api
       - campuslearn.notifications.api
       - campuslearn.privatemessaging.api
+      - campuslearn.chatbot.api
 
   # ----------------------------
   # APIs
@@ -208,6 +209,8 @@ services:
     networks:
       - campuslearn-network
     restart: unless-stopped
+    depends_on:
+       - n8n
 
 
 
@@ -272,6 +275,7 @@ services:
   # ----------------------------
   # MinIO
   # ----------------------------
+
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -288,6 +292,21 @@ services:
       - campuslearn-network
     restart: unless-stopped
 
+  # ----------------------------
+  # n8n workflow automation
+  # ----------------------------
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - campuslearn-network
+    restart: unless-stopped
+
 # ----------------------------
 # Volumes
 # ----------------------------
@@ -297,6 +316,7 @@ volumes:
   sqlserver_data:
   rabbitmq_data:
   minio_data:
+  n8n_data:
 
 
 

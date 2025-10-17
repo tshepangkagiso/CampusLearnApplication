@@ -67,4 +67,42 @@ public class ChatbotService(HttpClient client, IOptions<AgentSettings> options) 
 
         return chatbotResponse;
     }
+
+
+    public async Task<string> CampusLearnAutomationAgentAsync(string userQuestion, string moduleCode)
+    {
+        string url = "http://n8n:5678/webhook/05177e7a-eb69-4098-bbb5-2176425c2088/chat";
+
+        var request = new AiAgentDTO
+        {
+            sessionId = "CampusLearn",
+            action = "sendMessage",
+            chatInput = $"moduleCode: {moduleCode}, question: {userQuestion}"
+        };
+
+        var response = await client.PostAsJsonAsync(url, request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        try
+        {
+            var outerResponse = JsonSerializer.Deserialize<N8nResponse>(responseContent);
+            var innerResponse = JsonSerializer.Deserialize<N8nInnerResponse>(outerResponse.response);
+            return innerResponse.output;
+        }
+        catch (JsonException ex)
+        {
+            // Log the error and return raw response for debugging
+            Console.WriteLine($"JSON parsing error: {ex.Message}");
+            return responseContent;
+        }
+    }
+}
+public class N8nResponse
+{
+    public string response { get; set; } = string.Empty;
+}
+
+public class N8nInnerResponse
+{
+    public string output { get; set; } = string.Empty;
 }

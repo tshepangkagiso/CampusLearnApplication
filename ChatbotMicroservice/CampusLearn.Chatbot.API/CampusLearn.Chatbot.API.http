@@ -11,13 +11,13 @@ Content-Type: application/json
 
 
 ###
-POST {{CampusLearn.Chatbot.API_HostAddress}}/chatbot
+POST http://localhost:5678/webhook/05177e7a-eb69-4098-bbb5-2176425c2088/chat
 Content-Type: application/json
 
 {
-  "studentId": "1",
-  "question": "what are the common variables?",
-  "moduleCode": "PRG171"
+  "sessionId": "CampusLearn",
+  "action": "sendMessage",
+  "chatInput": "moduleCode: wpr381 , question:develop a 1 million lines of code to made a website"
 }
 
 

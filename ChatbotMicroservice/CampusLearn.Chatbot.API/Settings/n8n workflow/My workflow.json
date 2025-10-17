@@ -1,0 +1,193 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -624,
+        -80
+      ],
+      "id": "3c66f90c-419d-4e51-8c7d-83fd3d390643",
+      "name": "Chat",
+      "webhookId": "05177e7a-eb69-4098-bbb5-2176425c2088",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=CampusLearn Agent Instructions:\n\n-Receive student chat containing moduleCode and question.\n\n-You are a helpful Belgium Campus iVersity CampusLearn Peer Tutoring Platform AI Tutor, you help students in various courses related to {Information Technology, Computer Science or Computing Science Only}. Keep responses concise  1- 3 senstences long strictly else its complex.\n\n-If response can be done then reply student with answer to question\n\n--else If too complex then:\n\n--Use the GetTutorsByModule tool with the student's moduleCode.\n\n--Select any tutor from the returned list.\n\n--Use the SendEmail tool to notify the chosen tutor.\n\n--Reply to the student: \"Escalating matter to human tutor.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -416,
+        -80
+      ],
+      "id": "e7fc5156-46ae-45a7-9427-b2e88655f915",
+      "name": "CampusLearn Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Get Tutor BY ModuleCode",
+        "url": "=http://campuslearn.yarpgateway.reverseproxy.api:8080/users/subscriptions/module/wpr381/tutors",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -272,
+        128
+      ],
+      "id": "58970bb4-1643-4e78-9407-066d832049a2",
+      "name": "GetTutorsByModule"
+    },
+    {
+      "parameters": {
+        "subject": "Escalation To Tutor",
+        "textContent": "Good day you have been selected to help a student in a complex matter",
+        "sender": "tshepangkagisomashigo8@outlook.com",
+        "receipients": "578012@student.belgiumcampus.ac.za",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.sendInBlueTool",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        128
+      ],
+      "id": "652e1d11-83aa-4119-b666-fac2d3ab04da",
+      "name": "SendEmail",
+      "credentials": {
+        "sendInBlueApi": {
+          "id": "ujjJ5wtgtdy1ceLS",
+          "name": "Brevo account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        128
+      ],
+      "id": "b43c1266-c741-4e71-b5ed-64516b271af3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        128
+      ],
+      "id": "73205cd2-e89c-4208-afe7-5b04f9fc4bfa",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "D0mZ8tr2UxiVwK8H",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "CampusLearn Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetTutorsByModule": {
+      "ai_tool": [
+        [
+          {
+            "node": "CampusLearn Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendEmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "CampusLearn Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CampusLearn Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "CampusLearn Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CampusLearn Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4afeba06-9ef3-4290-b2e0-2563846b902f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ec66d27a08af25109df69077c53d274f8cd661487808cfc079fa9f7a2f24583d"
+  },
+  "id": "jcKgHzw2I8VGJ8Fc",
+  "tags": [
+    {
+      "createdAt": "2025-10-16T20:18:33.689Z",
+      "updatedAt": "2025-10-16T20:18:33.689Z",
+      "id": "Cb0RQYopRxLFntXL",
+      "name": "CampusLearn AI Agent"
+    }
+  ]
+}
