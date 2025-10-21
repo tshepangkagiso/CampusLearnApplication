@@ -5,6 +5,7 @@ import { StudentTopicsService } from '../Topics Related Services/student-topics.
 import { ForumService } from '../Forum Related Services/forum.service';
 import { ChatService } from '../Private Messages Related Services/chat.service';
 import { PrivateMessagesService } from '../Private Messages Related Services/private-messages.service';
+import { SubscribeModuleRequest } from '../../models/Student Related Models/student-request.dtos';
 
 @Injectable({
   providedIn: 'root'
@@ -34,16 +35,21 @@ export class StudentService {
     return this.profileService.getProfilePictureUrl(studentId);
   }
 
+  getProfilePicture(fileName: string)
+  {
+    return this.profileService.getProfilePicture(fileName);
+  }
+
 
 
 
 
   // Subscription methods
-  subscribeToModule(request: any) {
+  subscribeToModule(request: SubscribeModuleRequest) {
     return this.subscriptionService.subscribeToModule(request);
   }
 
-  unsubscribeFromModule(request: any) {
+  unsubscribeFromModule(request: SubscribeModuleRequest) {
     return this.subscriptionService.unsubscribeFromModule(request);
   }
 

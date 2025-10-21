@@ -15,7 +15,7 @@ export class StudentProfileService {
 
   // Get student profile
   getStudentProfile(studentId: number): Observable<StudentProfileResponse> {
-    return this.http.get<StudentProfileResponse>(`${this.baseUrl}/${studentId}`);
+    return this.http.get<StudentProfileResponse>(`${this.baseUrl}/userprofile/${studentId}`);
   }
 
   // Update student profile
@@ -32,16 +32,16 @@ export class StudentProfileService {
       formData.append('ProfilePicture', request.profilePicture);
     }
 
-    return this.http.post(`${this.baseUrl}/update`, formData);
+    return this.http.put(`${this.baseUrl}/userprofile/update`, formData);
   }
 
   // Get student's profile picture URL
   getProfilePictureUrl(studentId: number): Observable<{ profilePictureUrl: string }> {
-    return this.http.get<{ profilePictureUrl: string }>(`${this.baseUrl}/profile-picture-url/${studentId}`);
+    return this.http.get<{ profilePictureUrl: string }>(`${this.baseUrl}/userprofile/profile-picture-url/${studentId}`);
   }
 
   // Download profile picture file
   getProfilePicture(fileName: string): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/file/${fileName}`, { responseType: 'blob' });
+    return this.http.get(`${this.baseUrl}/userprofile/file/${fileName}`, { responseType: 'blob' });
   }
 }

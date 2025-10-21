@@ -9,7 +9,7 @@ import { AssignedTutorResponse, AvailableModulesResponse, StudentSubscriptionsRe
   providedIn: 'root'
 })
 export class StudentSubscriptionService {
-  private baseUrl = `${environment.apiUrl}/subscriptions`;
+  private baseUrl = `${environment.apiUrl}/users/subscriptions`;
 
   constructor(private http: HttpClient) {}
 

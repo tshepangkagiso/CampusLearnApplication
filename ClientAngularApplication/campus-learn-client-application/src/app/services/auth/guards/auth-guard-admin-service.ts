@@ -1,12 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { AuthService } from './auth-service';
 import { CanActivate, Router } from '@angular/router';
-import { UserRoleMap, UserRoleString } from '../../Interfaces/enums/userRole';
+import { UserRoleMap, UserRoleString } from '../../../Interfaces/enums/userRole';
+import { AuthService } from '../auth-service';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardTutorService implements CanActivate {
+export class AuthGuardAdminService implements CanActivate {
   private router = inject(Router);
   private authService = inject(AuthService);
 
@@ -20,8 +22,7 @@ export class AuthGuardTutorService implements CanActivate {
       this.router.navigate(['/restricted']);
       return false;
     }
-    
-    if(UserRoleMap[sessionUser.userRole] === UserRoleString.Tutor)
+    if(UserRoleMap[sessionUser.userRole] === UserRoleString.Admin)
     {
       return true;
     }
@@ -30,4 +31,5 @@ export class AuthGuardTutorService implements CanActivate {
       return false;
     }
   }
+
 }

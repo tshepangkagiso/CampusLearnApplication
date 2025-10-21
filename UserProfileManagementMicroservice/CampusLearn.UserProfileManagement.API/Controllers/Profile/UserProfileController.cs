@@ -4,8 +4,9 @@
 [ApiController]
 public class UserProfileController(UserManagementDbContext context, MinioService minio) : ControllerBase
 {
+
     //route for updating user
-    [HttpPost("update")]
+    [HttpPut("update")]
     public async Task<IActionResult> OnUpdateUserProfile([FromForm] UpdateUserDTO request)
     {
         try
@@ -13,29 +14,39 @@ public class UserProfileController(UserManagementDbContext context, MinioService
             var oldUser = await context.UserProfiles.FirstOrDefaultAsync(x => x.UserProfileID == request.UserProfileID);
             if (oldUser == null) return NotFound("User not found");
 
-            // Fix email validation logic
-            if (!request.Email.EndsWith("@student.belgiumcampus.ac.za") && !request.Email.EndsWith("@belgiumcampus.ac.za"))
-                return BadRequest("Invalid campus email format");
+   
+            if (!string.IsNullOrEmpty(request.Email) && request.Email != oldUser.Email)
+            {
+                if (!request.Email.EndsWith("@student.belgiumcampus.ac.za") && !request.Email.EndsWith("@belgiumcampus.ac.za"))
+                    return BadRequest("Invalid campus email format");
 
-            var emailParts = request.Email.Split('@');
-            if (emailParts.Length != 2)
-                return BadRequest("Invalid email format");
+                var emailParts = request.Email.Split('@');
+                if (emailParts.Length != 2)
+                    return BadRequest("Invalid email format");
 
-            var emailStudentNumber = emailParts[0];
-            if (request.StudentNumber.ToString() != emailStudentNumber)
-                return BadRequest("Student number does not match email");
+                var emailStudentNumber = emailParts[0];
+                if (request.StudentNumber.ToString() != emailStudentNumber)
+                    return BadRequest("Student number does not match email");
 
-            if (!Enum.IsDefined(typeof(UserRole), request.UserRole))
-                return BadRequest("Invalid user role");
+                // Check for duplicate email only if email is being changed
+                var existingUser = await context.UserProfiles
+                    .FirstOrDefaultAsync(u => u.Email == request.Email && u.UserProfileID != request.UserProfileID);
+                if (existingUser != null)
+                    return BadRequest("Email already exists");
+            }
 
-            if (!Enum.IsDefined(typeof(Qualification), request.Qualification))
-                return BadRequest("Invalid qualification");
 
-            // Check for duplicate email (excluding current user)
-            var existingUser = await context.UserProfiles
-                .FirstOrDefaultAsync(u => u.Email == request.Email && u.UserProfileID != request.UserProfileID);
-            if (existingUser != null)
-                return BadRequest("Email already exists");
+            oldUser.Name = string.IsNullOrEmpty(request.Name) ? oldUser.Name : request.Name;
+            oldUser.Surname = string.IsNullOrEmpty(request.Surname) ? oldUser.Surname : request.Surname;
+            oldUser.Email = string.IsNullOrEmpty(request.Email) ? oldUser.Email : request.Email;
+
+            oldUser.StudentNumber = request.StudentNumber == 0 ? oldUser.StudentNumber : request.StudentNumber;
+
+            oldUser.Qualification = Enum.IsDefined(typeof(Qualification), request.Qualification)
+                ? request.Qualification : oldUser.Qualification;
+
+            oldUser.UserRole = Enum.IsDefined(typeof(UserRole), request.UserRole)
+                ? request.UserRole : oldUser.UserRole;
 
             // Handle profile picture upload
             if (request.ProfilePicture != null && request.ProfilePicture.Length > 0)
@@ -45,7 +56,7 @@ public class UserProfileController(UserManagementDbContext context, MinioService
                 var contentType = request.ProfilePicture.ContentType;
 
                 // Validate file type and size: these restriction are setting profile pic
-                if (request.ProfilePicture.Length > 5 * 1024 * 1024) // 5MB limit
+                if (request.ProfilePicture.Length > 20 * 1024 * 1024) // 20MB limit
                     return BadRequest("File size too large");
 
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -60,14 +71,6 @@ public class UserProfileController(UserManagementDbContext context, MinioService
                 oldUser.ProfilePictureUrl = uniqueFileName;
 
             }
-
-            // Update user properties
-            oldUser.Name = request.Name;
-            oldUser.Surname = request.Surname;
-            oldUser.Email = request.Email;
-            oldUser.StudentNumber = request.StudentNumber;
-            oldUser.Qualification = request.Qualification;
-            oldUser.UserRole = request.UserRole;
 
             // Save changes
             context.UserProfiles.Update(oldUser);

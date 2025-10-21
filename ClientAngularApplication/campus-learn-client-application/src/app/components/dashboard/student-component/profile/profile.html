@@ -1,1 +1,153 @@
-<p>profile works!</p>
+<section *ngIf="student">
+  <div class="profile-container" *ngIf="student"> 
+    <div class="profile-header">
+      <h2>Student Profile</h2>
+    </div>
+    
+    <div class="profile-content">
+      <!-- Profile Picture -->
+      <div class="profile-picture-section" *ngIf="student.profilePictureUrl">
+        <img src="{{profilePicture}}" alt="Profile Picture" class="profile-picture">
+      </div>
+
+      <!-- Personal Information -->
+      <div class="info-section">
+        <h3>Personal Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Name:</label>
+            <span>{{student.name}} {{student.surname}}</span>
+          </div>
+          <div class="info-item">
+            <label>Email:</label>
+            <span>{{student.email}}</span>
+          </div>
+          <div class="info-item">
+            <label>Student Number:</label>
+            <span>{{student.studentNumber}}</span>
+          </div>
+          <div class="info-item">
+            <label>Qualification:</label>
+            <span>{{getQualificationText(student.qualification)}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Information -->
+      <div class="info-section">
+        <h3>Account Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>User Role:</label>
+            <span>{{getUserRoleText(role)}}</span>
+          </div>
+          <div class="info-item">
+            <label>Account Status:</label>
+            <span [class.active]="student.isActive" [class.inactive]="!student.isActive">
+              {{student.isActive ? 'Active' : 'Inactive'}}
+            </span>
+          </div>
+          <div class="info-item">
+            <label>Member Since:</label>
+            <span>{{formatDate(student.createdAt)}}</span>
+          </div>
+          <div class="info-item" *ngIf="student.lastLogin">
+            <label>Last Login:</label>
+            <span>{{formatDate(student.lastLogin)}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section *ngIf="student && updateStudent">
+  <h2>Update Profile</h2>
+  <form (ngSubmit)="onSubmit()" #formRef="ngForm">
+    <label> ProfileID:
+      <input type="number" [(ngModel)]="updateStudent.userProfileID" name="userProfileID" readonly>
+    </label>
+    <br>
+    <label> Name:
+      <input type="text" [(ngModel)]="updateStudent.name" name="name" required>
+    </label>
+    <br>
+    <label> Surname:
+      <input type="text" [(ngModel)]="updateStudent.surname" name="surname" required>
+    </label>
+    <br>
+    <label> Email:
+      <input type="email" [(ngModel)]="updateStudent.email" name="email" required> 
+    </label>
+    <br>
+    <label> Student Number:
+      <input type="number" [(ngModel)]="updateStudent.studentNumber" name="studentNumber" required readonly> 
+    </label>
+    <br>
+    <label> Qualification:
+      <select [(ngModel)]="updateStudent.qualification" name="qualification" required>
+        <option [value]="qualification.DIP">Diploma</option>
+        <option [value]="qualification.BIT">BIT</option>
+        <option [value]="qualification.BCOM">BCom</option>
+      </select>
+    </label>
+    <br>
+    <label> Profile Picture:
+      <input type="file" (change)="onFileSelected($event)" accept="image/*"> 
+    </label>
+    <br>
+    <button type="submit" [disabled]="formRef.invalid || isUpdating" class="update-btn">
+      <span *ngIf="!isUpdating">Update</span>
+      <div *ngIf="isUpdating" class="spinner"></div>
+    </button>
+  </form>
+</section>
+
+
+<!-- Available Modules Section -->
+<section *ngIf="availableModules">
+  <h2>Available Modules</h2>
+  <div class="modules-container">
+    <div class="module-card" *ngFor="let module of availableModules.notSubscribedModules">
+      <div class="module-info">
+        <h3>{{ module.moduleName }}</h3>
+        <p class="module-code">{{ module.moduleCode }}</p>
+      </div>
+      <button 
+        class="subscribe-btn" 
+        (click)="subscribeToModule(module.moduleCode)">
+        Subscribe
+      </button>
+    </div>
+  </div>
+  
+  <div *ngIf="availableModules.notSubscribedModules.length === 0" class="no-modules">
+    <p>No available modules to subscribe to.</p>
+  </div>
+</section>
+
+
+<!-- Subscribed Modules Section -->
+<section *ngIf="subscribedModules">
+  <h2>My Subscribed Modules</h2>
+  <div class="modules-container">
+    <div class="module-card" *ngFor="let module of subscribedModules.subscribedModules">
+      <div class="module-info">
+        <h3>{{ module.moduleName }}</h3>
+        <p class="module-code">{{ module.moduleCode }}</p>
+      </div>
+      <button class="unsubscribe-btn" (click)="unsubscribeFromModule(module.moduleCode)">
+        Unsubscribe
+      </button>
+    </div>
+  </div>
+  
+  <div *ngIf="subscribedModules.subscribedModules.length === 0" class="no-modules">
+    <p>You are not subscribed to any modules yet.</p>
+  </div>
+</section>
+
+<div *ngIf="!student" class="loading">
+  Loading profile...
+</div>
