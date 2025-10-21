@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { AuthRegister } from '../../Interfaces/auth/auth-register';
 import { AuthRegisterResponse } from '../../Interfaces/auth/auth-register-response';
 import { AuthSessionUser } from '../../Interfaces/auth/auth-session-user';
+import { ChangePasswordRequest } from '../../models/Student Related Models/student-request.dtos';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +30,27 @@ export class AuthService {
     return !!sessionStorage.getItem(this.tokenKey)
   }
 
-  // jwt token in session cookie
-  getItem(){
-    return sessionStorage.getItem(this.tokenKey)
-  }
+
+    // Change password
+    changePassword(request: ChangePasswordRequest): Observable<any> {
+      return this.httpClient.post(`${this.baseUrl}/change-password`, request);
+    }
+
+    // Request password reset
+    requestPasswordReset(email: string): Observable<any> {
+      return this.httpClient.post(`${this.baseUrl}/reset-password`, { email });
+    }
+
+    // Validate token
+    validateToken(token: string): Observable<any> {
+      return this.httpClient.post(`${this.baseUrl}/validate-token`, { token });
+    }
+
+    
+    // jwt token in session cookie
+    getItem(){
+      return sessionStorage.getItem(this.tokenKey)
+    }
 
   //actual user who logged in, has all details we need
   getUser(): AuthSessionUser | null{

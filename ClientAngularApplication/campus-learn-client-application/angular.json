@@ -17,6 +17,9 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "@microsoft/signalr"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
