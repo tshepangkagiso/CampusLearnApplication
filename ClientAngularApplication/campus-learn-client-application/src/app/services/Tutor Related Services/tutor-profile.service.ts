@@ -9,7 +9,7 @@ import { TutorProfileResponse } from '../../models/Tutor Related Models/tutor-re
   providedIn: 'root'
 })
 export class TutorProfileService {
-  private baseUrl = `${environment.apiUrl}/users`;
+  private baseUrl = `${environment.apiUrl}/users/userprofile`;
 
   constructor(private http: HttpClient) {}
 
@@ -29,10 +29,10 @@ export class TutorProfileService {
     formData.append('StudentNumber', request.studentNumber.toString());
     
     if (request.profilePicture) {
-      formData.append('ProfilePicture', request.profilePicture);
+      formData.append('ProfilePicture', request.profilePicture); 
     }
 
-    return this.http.post(`${this.baseUrl}/update`, formData);
+    return this.http.put(`${this.baseUrl}/update`, formData);
   }
 
   // Get tutor's profile picture URL

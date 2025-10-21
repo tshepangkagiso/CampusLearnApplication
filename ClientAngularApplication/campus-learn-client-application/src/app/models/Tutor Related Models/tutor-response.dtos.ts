@@ -35,6 +35,18 @@ export interface TutorQualificationsResponse {
   totalQualifications: number;
 }
 
+export interface AvailableTutorModulesResponse {
+  tutor: string;
+  notQualifiedModules: Array<{
+    moduleID: number;
+    moduleCode: string;
+    moduleName: string;
+    programType: Qualification;
+    description?: string;
+  }>;
+  totalAvailable: number;
+}
+
 export interface ModuleTutorsResponse {
   module: string;
   moduleCode: string;

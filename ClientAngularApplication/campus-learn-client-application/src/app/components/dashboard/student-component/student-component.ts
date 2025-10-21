@@ -18,7 +18,7 @@ export class StudentComponent {
   private sessionUser = inject(AuthService);
 
   public qualification = Qualification;
-  public student! : StudentProfileResponse;
+  public student? : StudentProfileResponse;
   public role = -1;
 
   public profilePicture = ""
@@ -33,8 +33,8 @@ export class StudentComponent {
 
   public isUpdating = false;
 
-  public availableModules!: AvailableModulesResponse;
-  public subscribedModules!: StudentSubscriptionsResponse;; 
+  public availableModules?: AvailableModulesResponse;
+  public subscribedModules?: StudentSubscriptionsResponse;; 
   public unsubscribingModule: string | null = null;
 
 
@@ -205,22 +205,39 @@ export class StudentComponent {
   subscribeToModule(moduleCode: string) {
     console.log('Subscribing to module:', moduleCode);
     let user = this.sessionUser.getUser();
-    if(user?.userProfileID)
-    {
+    if(user?.userProfileID) {
       let sub: SubscribeModuleRequest = {
         userId: user.userProfileID,
         moduleCode: moduleCode
       };
       
-      // Call your subscription service here
       this.studentService.subscribeToModule(sub).subscribe({
         next: res => {
           console.log('Subscription successful:', res);
-          // Refresh BOTH lists after subscription
-          this.refreshAllModules();
+          this.refreshAllModules(); // Refresh both lists after subscription
         },
         error: err => {
           console.log('Subscription error:', err);
+        }
+      });
+    }
+  }
+
+  unsubscribeFromModule(moduleCode: string) {
+    let user = this.sessionUser.getUser();
+    
+    if(user?.userProfileID) {
+      let unsub: SubscribeModuleRequest = {
+        userId: user.userProfileID,
+        moduleCode: moduleCode
+      };
+      
+      this.studentService.unsubscribeFromModule(unsub).subscribe({
+        next: res => {
+          this.refreshAllModules(); // Refresh both lists after unsubscription
+        },
+        error: err => {
+          console.log('Unsubscription error:', err);
         }
       });
     }
@@ -237,8 +254,7 @@ export class StudentComponent {
     }
   }
 
-
-    private refreshAvailableModules() {
+  private refreshAvailableModules() {
     let user = this.sessionUser.getUser();
     if (user?.userProfileID) {
       this.studentService.getAvailableModules(user.userProfileID).subscribe({
@@ -250,38 +266,17 @@ export class StudentComponent {
     }
   }
 
-
-
-  
   loadSubscribedModules(userId: number) {
-      this.studentService.getSubscribedModules(userId).subscribe({
-        next: res => {
-          this.subscribedModules = res;
-        },
-        error: err => { console.log("error getting subscribed modules: " + err) }
-      });
-    }
-
-  unsubscribeFromModule(moduleCode: string) {
-    let user = this.sessionUser.getUser();
-    
-    if(user?.userProfileID) {
-      let unsub: SubscribeModuleRequest = {
-        userId: user.userProfileID,
-        moduleCode: moduleCode
-      };
-      
-      this.studentService.unsubscribeFromModule(unsub).subscribe({
-        next: res => {
-          this.loadSubscribedModules(user.userProfileID);
-        },
-        error: err => {
-          console.log('Unsubscription error:', err);
-        }
-      });
-    }
+    this.studentService.getSubscribedModules(userId).subscribe({
+      next: res => {
+        this.subscribedModules = res;
+      },
+      error: err => { console.log("error getting subscribed modules: ", err) }
+    });
   }
 
+
+  //logout
   onLogout(){
     this.sessionUser.onLogout();
   }

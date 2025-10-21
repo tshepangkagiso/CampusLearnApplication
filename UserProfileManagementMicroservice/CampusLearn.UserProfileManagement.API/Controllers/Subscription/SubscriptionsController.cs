@@ -348,6 +348,51 @@ public class SubscriptionsController(UserManagementDbContext context) : Controll
         }
     }
 
+    //all modules student is not subscribed to
+    [HttpGet("module/tutors/notsubscribed/{userId}")]
+    public async Task<IActionResult> OnTutorNotSubscribed([FromRoute] int userId)
+    {
+        try
+        {
+            var tutor = await context.Tutors
+                .Include(t => t.UserProfile)
+                .FirstOrDefaultAsync(t => t.UserProfileID == userId);
+
+            if (tutor == null) return BadRequest("Tutor not found");
+
+            // Get all modules the tutor IS qualified for (to exclude them)
+            var qualifiedModuleIds = await context.TutorModules
+                .Where(tm => tm.TutorID == tutor.TutorID && tm.IsActive)
+                .Select(tm => tm.ModuleID)
+                .ToListAsync();
+
+            // Get all modules NOT qualified for that match tutor's qualification
+            var notQualifiedModules = await context.Modules
+                .Where(m => m.ProgramType == tutor.UserProfile.Qualification &&
+                           !qualifiedModuleIds.Contains(m.ModuleID))
+                .Select(m => new
+                {
+                    ModuleID = m.ModuleID,
+                    ModuleCode = m.ModuleCode,
+                    ModuleName = m.ModuleName,
+                    ProgramType = m.ProgramType,
+                    Description = m.Description
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                Tutor = $"{tutor.UserProfile.Name} {tutor.UserProfile.Surname}",
+                NotQualifiedModules = notQualifiedModules,
+                TotalAvailable = notQualifiedModules.Count
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message, ex);
+            return BadRequest();
+        }
+    }
 
     // Get all tutors qualified for a particular module
     [HttpGet("module/{moduleCode}/tutors")]

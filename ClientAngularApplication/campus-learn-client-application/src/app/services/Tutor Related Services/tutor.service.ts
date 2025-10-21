@@ -55,7 +55,11 @@ export class TutorService {
     return this.qualificationService.getTutorsForModule(moduleCode);
   }
 
+  getAvailableModules(tutorId: number) {
+    return this.qualificationService.getModulesTutorNotSubscribedTo(tutorId);
+  }
 
+ 
 
 
 

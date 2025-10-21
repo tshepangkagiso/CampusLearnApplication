@@ -1,167 +1,199 @@
-<div class="dashboard-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <h1>Campus<span>Learn</span></h1>
-        </div>
-        
-        <div class="user-info">
-            <h3>{{name}}<span class="badge">Tutor</span></h3>
-            <p>Qualification: {{qualification}}</p>
-        </div>
-        
-        <ul class="nav-links">
-            <li class="active"><a href="#"><i>📊</i> Dashboard</a></li>
-            <li><a href="#"><i>👨‍🏫</i> My Tutor Topics</a></li>
-            <li><a href="#"><i>❓</i> Student Questions</a></li>
-            <li><a href="#"><i>💬</i> Messages</a></li>
-            <li><a href="#"><i>📚</i> Resources</a></li>
-            <li><a href="#"><i>📈</i> Performance</a></li>
-            <li><a href="#"><i>⚙️</i> Settings</a></li>
-            <li><a href="#" (click) = "onLogout()"><i>🚪</i> Logout</a></li>
-        </ul>
+<!-- navigation.component.html -->
+<nav class="navbar">
+  <div class="nav-container">
+    <!-- Logo and Brand -->
+    <div class="nav-brand">
+      <h1>CampusLearn™</h1>
     </div>
-    
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="header">
-            <h2>Tutor Dashboard</h2>
-            <div class="user-profile">
-                <img src="https://i.pravatar.cc/150?img=8" alt="Profile">
-                <span>{{name}}</span>
-            </div>
-        </div>
-        
-        <div class="stats-cards">
-            <div class="card stat-card">
-                <div class="stat-icon primary">
-                    <i>👥</i>
-                </div>
-                <div class="stat-info">
-                    <h3>8</h3>
-                    <p>Active Students</p>
-                </div>
-            </div>
-            
-            <div class="card stat-card">
-                <div class="stat-icon success">
-                    <i>✅</i>
-                </div>
-                <div class="stat-info">
-                    <h3>24</h3>
-                    <p>Questions Answered</p>
-                </div>
-            </div>
-            
-            <div class="card stat-card">
-                <div class="stat-icon warning">
-                    <i>⏱️</i>
-                </div>
-                <div class="stat-info">
-                    <h3>3</h3>
-                    <p>Pending Responses</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section-title">
-            <h3>My Tutoring Topics</h3>
-            <button class="btn btn-primary">Create New Topic</button>
-        </div>
-        <div class="topics-grid">
-            <div class="card topic-card">
-                <div class="topic-header">
-                    <div class="topic-title">Database Normalization</div>
-                    <div class="topic-status status-active">Active</div>
-                </div>
-                <div class="topic-student">
-                    <img src="https://i.pravatar.cc/150?img=32" alt="Student">
-                    <span>Sarah Johnson</span>
-                </div>
-                <div class="topic-description">
-                    Helping students understand 3NF and BCNF with practical examples.
-                </div>
-                <div class="topic-actions">
-                    <button class="btn btn-primary">View Discussion</button>
-                    <button class="btn btn-success">Upload Resources</button>
-                </div>
-            </div>
-            
-            <div class="card topic-card">
-                <div class="topic-header">
-                    <div class="topic-title">SQL Queries</div>
-                    <div class="topic-status status-active">Active</div>
-                </div>
-                <div class="topic-student">
-                    <img src="https://i.pravatar.cc/150?img=45" alt="Student">
-                    <span>Michael Brown</span>
-                </div>
-                <div class="topic-description">
-                    Advanced JOIN operations and subqueries for BIT212 assignment.
-                </div>
-                <div class="topic-actions">
-                    <button class="btn btn-primary">View Discussion</button>
-                    <button class="btn btn-success">Upload Resources</button>
-                </div>
-            </div>
-            
-            <div class="card topic-card">
-                <div class="topic-header">
-                    <div class="topic-title">Web Development</div>
-                    <div class="topic-status status-pending">Pending</div>
-                </div>
-                <div class="topic-student">
-                    <img src="https://i.pravatar.cc/150?img=22" alt="Student">
-                    <span>Emma Davis</span>
-                </div>
-                <div class="topic-description">
-                    JavaScript event handling and DOM manipulation concepts.
-                </div>
-                <div class="topic-actions">
-                    <button class="btn btn-primary">View Discussion</button>
-                    <button class="btn btn-success">Upload Resources</button>
-                </div>
-            </div>
-        </div>
-        
-        <h3 class="section-title">Recent Student Questions</h3>
-        <div class="card recent-questions">
-            <ul class="questions-list">
-                <li class="question-item">
-                    <div class="question-header">
-                        <div class="question-title">Clarification on BCNF</div>
-                        <div class="question-time">30 minutes ago</div>
-                    </div>
-                    <div class="question-student">
-                        <img src="https://i.pravatar.cc/150?img=32" alt="Student">
-                        <span>Sarah Johnson</span>
-                    </div>
-                    <div class="question-content">
-                        I'm confused about when to decompose relations in BCNF. Could you explain with an example from our assignment?
-                    </div>
-                    <div class="question-actions">
-                        <button class="btn btn-primary btn-small">Respond</button>
-                        <button class="btn btn-success btn-small">Schedule Session</button>
-                    </div>
-                </li>
-                <li class="question-item">
-                    <div class="question-header">
-                        <div class="question-title">Help with JOIN query</div>
-                        <div class="question-time">2 hours ago</div>
-                    </div>
-                    <div class="question-student">
-                        <img src="https://i.pravatar.cc/150?img=45" alt="Student">
-                        <span>Michael Brown</span>
-                    </div>
-                    <div class="question-content">
-                        I'm trying to join three tables but getting duplicate results. Can you review my query?
-                    </div>
-                    <div class="question-actions">
-                        <button class="btn btn-primary btn-small">Respond</button>
-                        <button class="btn btn-success btn-small">Schedule Session</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
+
+    <!-- Navigation Links -->
+    <div class="nav-links">
+      <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+      <a class="nav-link" routerLink="/modules">Modules</a>
+      <a class="nav-link" routerLink="/forum">Forum</a>
+      <a class="nav-link" routerLink="/messages">Messages</a>
+      <a class="nav-link" routerLink="/help">Help</a>
     </div>
+
+    <!-- User Menu -->
+    <div class="nav-user">
+      <div class="user-menu">
+        <span class="user-greeting">Welcome! {{tutor?.name}} {{tutor?.surname}}</span>
+        <button class="logout-btn" (click)="onLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Tutor Dashboard</h1>
+    <p>Manage your qualifications and tutor profile</p>
+  </div>
+
+  <!-- Profile Section -->
+  <section class="dashboard-card profile-section" *ngIf="tutor">
+    <!-- Profile Sidebar -->
+    <div class="profile-sidebar">
+      <div class="profile-picture-section" *ngIf="tutor?.profilePictureUrl">
+        <img [src]="profilePicture" alt="Profile Picture" class="profile-picture-large">
+      </div>
+      <div class="profile-stats">
+        <div class="stat-card">
+          <span class="stat-number">{{qualifiedModules?.totalQualifications || 0}}</span>
+          <span class="stat-label">Qualified Modules</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">{{availableModules?.totalAvailable || 0}}</span>
+          <span class="stat-label">Available to Qualify</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Main Content -->
+    <div class="profile-main">
+      <h2>Profile Information</h2>
+      
+      <!-- Personal Information -->
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Full Name</label>
+          <span>{{tutor.name}} {{tutor.surname}}</span>
+        </div>
+        <div class="info-item">
+          <label>Email</label>
+          <span>{{tutor.email}}</span>
+        </div>
+        <div class="info-item">
+          <label>Student Number</label>
+          <span>{{tutor.studentNumber}}</span>
+        </div>
+        <div class="info-item">
+          <label>Qualification</label>
+          <span>{{getQualificationText(tutor.qualification)}}</span>
+        </div>
+        <div class="info-item">
+          <label>User Role</label>
+          <span>{{getUserRoleText(role)}}</span>
+        </div>
+        <div class="info-item">
+          <label>Account Status</label>
+          <span [class.active]="tutor.isActive" [class.inactive]="!tutor.isActive">
+            {{tutor.isActive ? 'Active' : 'Inactive'}}
+          </span>
+        </div>
+        <div class="info-item">
+          <label>Member Since</label>
+          <span>{{formatDate(tutor.createdAt)}}</span>
+        </div>
+        <div class="info-item" *ngIf="tutor.lastLogin">
+          <label>Last Login</label>
+          <span>{{formatDate(tutor.lastLogin)}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Update Profile Section -->
+  <section class="dashboard-card" *ngIf="tutor && updateTutor">
+    <h2>Update Profile</h2>
+    <form (ngSubmit)="onSubmit()" #formRef="ngForm" class="form-grid">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" [(ngModel)]="updateTutor.name" name="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="surname">Surname</label>
+        <input id="surname" type="text" [(ngModel)]="updateTutor.surname" name="surname" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" [(ngModel)]="updateTutor.email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="studentNumber">Student Number</label>
+        <input id="studentNumber" type="number" [(ngModel)]="updateTutor.studentNumber" name="studentNumber" required readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="qualification">Qualification</label>
+        <select 
+          id="qualification"
+          [(ngModel)]="updateTutor.qualification" 
+          name="qualification" 
+          required>
+          <option [value]="qualification.DIP">Diploma</option>
+          <option [value]="qualification.BIT">BIT</option>
+          <option [value]="qualification.BCOM">BCom</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="profilePicture">Profile Picture</label>
+        <input 
+          id="profilePicture"
+          type="file" 
+          (change)="onFileSelected($event)" 
+          accept="image/*">
+      </div>
+      
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <button type="submit" [disabled]="formRef.invalid || isUpdating" class="update-btn">
+          <span *ngIf="!isUpdating">Update Profile</span>
+          <div *ngIf="isUpdating" class="spinner"></div>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Modules Grid -->
+  <div class="modules-grid">
+    <!-- Available Modules to Qualify For -->
+    <section class="dashboard-card modules-section" *ngIf="availableModules">
+      <h2>Available to Qualify For</h2>
+      <div class="modules-container">
+        <div class="module-card" *ngFor="let module of availableModules.notQualifiedModules">
+          <div class="module-info">
+            <h3>{{ module.moduleName }}</h3>
+            <p class="module-code">{{ module.moduleCode }}</p>
+          </div>
+          <button class="subscribe-btn" (click)="qualifyForModule(module.moduleCode)">
+            Qualify
+          </button>
+        </div>
+      </div>
+      <div *ngIf="availableModules.notQualifiedModules.length === 0" class="no-modules">
+        <p>No available modules to qualify for</p>
+      </div>
+    </section>
+
+    <!-- Qualified Modules -->
+    <section class="dashboard-card modules-section" *ngIf="qualifiedModules">
+      <h2>My Qualifications</h2>
+      <div class="modules-container">
+        <div class="module-card" *ngFor="let module of qualifiedModules.qualifiedModules">
+          <div class="module-info">
+            <h3>{{ module.moduleName }}</h3>
+            <p class="module-code">{{ module.moduleCode }}</p>
+            <p class="qualified-date">Qualified: {{ formatDate(module.qualifiedSince) }}</p>
+          </div>
+          <button class="unsubscribe-btn" (click)="removeQualification(module.moduleCode)">
+            Remove Qualification
+          </button>
+        </div>
+      </div>
+      <div *ngIf="qualifiedModules.qualifiedModules.length === 0" class="no-modules">
+        <p>You are not qualified for any modules yet</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="!tutor" class="loading dashboard-card">
+    <p>Loading your profile...</p>
+  </div>
 </div>

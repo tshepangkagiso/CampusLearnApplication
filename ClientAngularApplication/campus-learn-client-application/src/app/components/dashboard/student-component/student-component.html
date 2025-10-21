@@ -18,7 +18,7 @@
     <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{student.name}} {{student.surname}}</span>
+        <span class="user-greeting">Welcome! {{student?.name}} {{student?.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
@@ -41,11 +41,11 @@
       </div>
       <div class="profile-stats">
         <div class="stat-card">
-          <span class="stat-number">{{subscribedModules.totalSubscriptions || 0}}</span>
+          <span class="stat-number">{{subscribedModules?.totalSubscriptions || 0}}</span>
           <span class="stat-label">Subscribed Modules</span>
         </div>
         <div class="stat-card">
-          <span class="stat-number">{{availableModules.totalAvailable || 0}}</span>
+          <span class="stat-number">{{availableModules?.totalAvailable || 0}}</span>
           <span class="stat-label">Available Modules</span>
         </div>
       </div>

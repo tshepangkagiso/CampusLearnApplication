@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../models/environments/environment';
 import { SubscribeModuleRequest } from '../../models/Student Related Models/student-request.dtos';
-import { TutorQualificationResponse, TutorQualificationsResponse, ModuleTutorsResponse } from '../../models/Tutor Related Models/tutor-response.dtos';
+import { TutorQualificationResponse, TutorQualificationsResponse, ModuleTutorsResponse, AvailableTutorModulesResponse } from '../../models/Tutor Related Models/tutor-response.dtos';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TutorQualificationService {
-  private baseUrl = `${environment.apiUrl}/subscriptions`;
+  private baseUrl = `${environment.apiUrl}/users/Subscriptions`;
 
   constructor(private http: HttpClient) {}
 
@@ -32,5 +32,10 @@ export class TutorQualificationService {
   // Get all tutors qualified for a specific module
   getTutorsForModule(moduleCode: string): Observable<ModuleTutorsResponse> {
     return this.http.get<ModuleTutorsResponse>(`${this.baseUrl}/module/${moduleCode}/tutors`);
+  }
+
+
+  getModulesTutorNotSubscribedTo(tutorId: number): Observable<AvailableTutorModulesResponse> {
+    return this.http.get<AvailableTutorModulesResponse>(`${this.baseUrl}/module/tutors/notsubscribed/${tutorId}`);
   }
 }
