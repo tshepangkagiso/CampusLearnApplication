@@ -10,7 +10,6 @@ import { RestrictedComponent } from './components/auth/restricted-component/rest
 import { AuthGuardAdminService } from './services/auth/guards/auth-guard-admin-service';
 import { AuthGuardTutorService } from './services/auth/guards/auth-guard-tutor-service';
 import { AuthGuardStudentService } from './services/auth/guards/auth-guard-student-service';
-import { Profile } from './components/dashboard/student-component/profile/profile';
 
 export const routes: Routes = [
     {path:'login', component: LoginComponent, title:'Login - CampusLearn™'},
@@ -26,6 +25,5 @@ export const routes: Routes = [
 
 
 
-    {path:'student', component: StudentComponent, title:'Student Dashboard - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]},
-    {path:'student/profile', component: Profile, title:'Student Profile - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]}
+    {path:'student', component: StudentComponent, title:'Student Dashboard - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]}
 ];
