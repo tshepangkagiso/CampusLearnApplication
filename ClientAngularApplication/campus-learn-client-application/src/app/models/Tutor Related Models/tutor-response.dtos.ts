@@ -65,7 +65,7 @@ export interface ModuleTutorsResponse {
 }
 
 export interface FAQResponse {
-  faqID: number;
+  faqid: number;
   frequentlyAskedQuestion: string;
   answer: string;
   tutorID: number;

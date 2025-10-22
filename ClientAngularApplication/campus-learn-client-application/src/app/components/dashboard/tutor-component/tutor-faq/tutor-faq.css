@@ -129,3 +129,286 @@
     font-size: 1.5em;
   }
 }
+
+.faqs-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.faqs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.faq-stats {
+  display: flex;
+  gap: 15px;
+}
+
+.stat {
+  background: #ecf0f1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat.published {
+  background: #d4edda;
+  color: #155724;
+}
+
+.stat.draft {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #2471a3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #3498db;
+  border: 1px solid #3498db;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: transparent;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-faq-form, .edit-faq-form {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border-left: 4px solid #3498db;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.form-group textarea, .form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-checkbox {
+  margin: 20px 0;
+}
+
+.form-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.faqs-list {
+  margin-top: 20px;
+}
+
+.loading, .no-faqs {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+}
+
+.no-faqs button {
+  margin-top: 15px;
+}
+
+.faq-cards {
+  display: grid;
+  gap: 20px;
+}
+
+.faq-card {
+  background: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.faq-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.faq-card.published {
+  border-left: 4px solid #27ae60;
+}
+
+.faq-card.draft {
+  border-left: 4px solid #f39c12;
+  background: #fffdf6;
+}
+
+.faq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.faq-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.faq-meta {
+  display: flex;
+  gap: 10px;
+}
+
+.module-badge {
+  background: #3498db;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.published {
+  background: #27ae60;
+  color: white;
+}
+
+.status-badge.draft {
+  background: #f39c12;
+  color: white;
+}
+
+.faq-answer {
+  color: #7f8c8d;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.faq-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ecf0f1;
+  padding-top: 15px;
+}
+
+.faq-info {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: #95a5a6;
+}
+
+.faq-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .faqs-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .faq-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .faq-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .faq-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .faq-info {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .faq-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

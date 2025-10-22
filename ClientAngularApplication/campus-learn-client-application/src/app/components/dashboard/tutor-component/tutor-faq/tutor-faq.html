@@ -1,12 +1,9 @@
-<!-- navigation.component.html -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
 
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/tutor']">Home</a>
       <a class="nav-link" [routerLink]="['/tutor/topics']">Topics</a>
@@ -14,14 +11,154 @@
       <a class="nav-link" [routerLink]="['/tutor/messages']">Messages</a>
     </div>
 
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
-<h1>FAQS</h1>
+<div class="faqs-container">
+  <div class="faqs-header">
+    <h1>My FAQs</h1>
+    <div class="faq-stats">
+      <span class="stat">Total: {{faqs.length}}</span>
+      <span class="stat published">Published: {{getPublishedCount()}}</span>
+      <span class="stat draft">Drafts: {{getDraftCount()}}</span>
+    </div>
+    <button class="btn-primary" (click)="showCreateForm = true">
+      Create New FAQ
+    </button>
+  </div>
+
+  <!-- Create FAQ Form -->
+  <div class="create-faq-form" *ngIf="showCreateForm">
+    <h3>Create New FAQ</h3>
+    <form (ngSubmit)="createFAQ()" #createForm="ngForm">
+      <div class="form-group">
+        <label for="question">Question *</label>
+        <textarea id="question" [(ngModel)]="newFaq.question" name="question" required rows="3"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="answer">Answer *</label>
+        <textarea id="answer" [(ngModel)]="newFaq.answer" name="answer" required rows="5"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="moduleCode">Module *</label>
+        <select id="moduleCode" [(ngModel)]="newFaq.moduleCode" name="moduleCode" required>
+          <option value="">Select a module</option>
+          <option *ngFor="let module of qualifiedModules" [value]="module.moduleCode">
+            {{ module.moduleCode }} - {{ module.moduleName }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="newFaq.isPublished" name="isPublished">
+          Publish immediately
+        </label>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" [disabled]="createForm.invalid" class="btn-primary">
+          Create FAQ
+        </button>
+        <button type="button" (click)="showCreateForm = false; resetNewFaqForm()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Edit FAQ Form -->
+  <div class="edit-faq-form" *ngIf="showEditForm">
+    <h3>Edit FAQ</h3>
+    <form (ngSubmit)="updateFAQ()" #editForm="ngForm">
+      <div class="form-group">
+        <label for="editQuestion">Question *</label>
+        <textarea id="editQuestion" [(ngModel)]="editFaq.question" name="editQuestion" required rows="3"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="editAnswer">Answer *</label>
+        <textarea id="editAnswer" [(ngModel)]="editFaq.answer" name="editAnswer" required rows="5"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="editModuleCode">Module *</label>
+        <select id="editModuleCode" [(ngModel)]="editFaq.moduleCode" name="editModuleCode" required>
+          <option value="">Select a module</option>
+          <option *ngFor="let module of qualifiedModules" [value]="module.moduleCode">
+            {{ module.moduleCode }} - {{ module.moduleName }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="editFaq.isPublished" name="editIsPublished">
+          Published
+        </label>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" [disabled]="editForm.invalid" class="btn-primary">
+          Update FAQ
+        </button>
+        <button type="button" (click)="cancelEdit()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- FAQs List -->
+  <div class="faqs-list">
+    <div *ngIf="isLoading" class="loading">Loading your FAQs...</div>
+    
+    <div *ngIf="!isLoading && faqs.length === 0" class="no-faqs">
+      <p>You haven't created any FAQs yet.</p>
+      <p>Create FAQs to help students with common questions about your modules.</p>
+      <button class="btn-primary" (click)="showCreateForm = true">Create Your First FAQ</button>
+    </div>
+
+    <div class="faq-cards" *ngIf="!isLoading && faqs.length > 0">
+      <div class="faq-card" *ngFor="let faq of faqs" [class.published]="faq.isPublished" [class.draft]="!faq.isPublished">
+        <div class="faq-header">
+          <h3>{{ faq.frequentlyAskedQuestion }}</h3>
+          <div class="faq-meta">
+            <span class="module-badge">{{ faq.moduleCode }}</span>
+            <span class="status-badge" [class.published]="faq.isPublished" [class.draft]="!faq.isPublished">
+              {{ faq.isPublished ? 'Published' : 'Draft' }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="faq-answer">
+          <p>{{ faq.answer }}</p>
+        </div>
+        
+        <div class="faq-footer">
+          <div class="faq-info">
+            <span>Created: {{ formatDate(faq.createdAt) }}</span>
+            <span *ngIf="faq.updatedAt">Updated: {{ formatDate(faq.updatedAt) }}</span>
+            <span>Views: {{ faq.viewCount }}</span>
+          </div>
+          
+          <div class="faq-actions">
+            <button class="btn-secondary" (click)="editFAQ(faq)">Edit</button>
+            <button class="btn-outline" (click)="togglePublishFAQ(faq)">
+              {{ faq.isPublished ? 'Unpublish' : 'Publish' }}
+            </button>
+            <button class="btn-danger" (click)="deleteFAQ(faq.faqid)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

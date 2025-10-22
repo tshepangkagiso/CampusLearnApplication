@@ -1,12 +1,10 @@
-<!-- navigation.component.html -->
+<!-- student-faq.html -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
 
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/student']">Home</a>
       <a class="nav-link" [routerLink]="['/student/topics']">Topics</a>
@@ -15,15 +13,78 @@
       <a class="nav-link" [routerLink]="['/student/chatbot']">Chatbot</a>
     </div>
 
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
+<div class="faqs-container">
+  <div class="faqs-header">
+    <h1>Frequently Asked Questions</h1>
+    <p>Browse FAQs for your subscribed modules</p>
+  </div>
 
-<h1>FAQS</h1>
+  <!-- Module Selection -->
+  <div class="module-selector" *ngIf="subscribedModules.length > 0">
+    <label for="moduleSelect">Select Module:</label>
+    <select id="moduleSelect" (change)="onModuleChange($event)" [value]="selectedModule">
+      <option value="">Choose a module...</option>
+      <option *ngFor="let module of subscribedModules" [value]="module.moduleCode">
+        {{ module.moduleCode }} - {{ module.moduleName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading FAQs...</p>
+  </div>
+
+  <!-- No Modules Subscribed -->
+  <div *ngIf="!isLoading && subscribedModules.length === 0" class="no-modules">
+    <h3>No Modules Subscribed</h3>
+    <p>You haven't subscribed to any modules yet.</p>
+    <p>Subscribe to modules to view their FAQs.</p>
+    <a [routerLink]="['/student']" class="btn-primary">Browse Modules</a>
+  </div>
+
+  <!-- FAQs List -->
+  <div *ngIf="!isLoading && selectedModule && faqs.length > 0" class="faqs-list">
+    <div class="module-header">
+      <h2>FAQs for {{ selectedModule }}</h2>
+      <span class="faq-count">{{ faqs.length }} FAQ(s)</span>
+    </div>
+
+    <div class="faq-cards">
+      <div class="faq-card" *ngFor="let faq of faqs">
+        <div class="faq-header">
+          <h3>{{ faq.frequentlyAskedQuestion }}</h3>
+          <div class="faq-meta">
+            <span class="module-badge">{{ faq.moduleCode }}</span>
+            <span class="view-count">Views: {{ faq.viewCount }}</span>
+          </div>
+        </div>
+        
+        <div class="faq-answer">
+          <p>{{ faq.answer }}</p>
+        </div>
+        
+        <div class="faq-footer">
+          <span>Created: {{ formatDate(faq.createdAt) }}</span>
+          <span *ngIf="faq.updatedAt">Updated: {{ formatDate(faq.updatedAt) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No FAQs for Selected Module -->
+  <div *ngIf="!isLoading && selectedModule && faqs.length === 0" class="no-faqs">
+    <h3>No FAQs Available</h3>
+    <p>There are no FAQs available for {{ selectedModule }} yet.</p>
+    <p>Check back later or ask your tutor to create some FAQs.</p>
+  </div>
+</div>
