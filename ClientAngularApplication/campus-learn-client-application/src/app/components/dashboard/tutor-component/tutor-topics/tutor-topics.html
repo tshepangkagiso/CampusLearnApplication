@@ -1,26 +1,229 @@
-<!-- navigation.component.html -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
 
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/tutor']">Home</a>
       <a class="nav-link" [routerLink]="['/tutor/forums']">Forum</a>
       <a class="nav-link" [routerLink]="['/tutor/messages']">Messages</a>
+      <a class="nav-link" [routerLink]="['/tutor/faqs']">My FAQs</a>
     </div>
 
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} (Tutor)</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
-<h1>Topics Page</h1>
+<div class="topics-container">
+  <div class="topics-header">
+    <h1>Assigned Queries</h1>
+    <div class="tutor-stats">
+      <span class="stat">Total Queries: {{tutorQueries.totalQueries || 0}}</span>
+    </div>
+  </div>
+
+  <div class="queries-list">
+    <div *ngIf="isLoading" class="loading">Loading assigned queries...</div>
+    
+    <div *ngIf="!isLoading && tutorQueries.queries.length === 0" class="no-queries">
+      <p>No queries assigned to you yet.</p>
+      <p>Students will see you as available for your qualified modules.</p>
+    </div>
+
+    <div class="query-cards" *ngIf="!isLoading && tutorQueries.queries.length > 0">
+      <div class="query-card" *ngFor="let query of tutorQueries.queries" 
+          [class.urgent]="query.isUrgent" [class.resolved]="query.isResolved">
+        <div class="query-header">
+          <h3>{{ query.queryTopicTitle }}</h3>
+          <div class="query-meta">
+            <span class="module-badge">{{ query.relatedModuleCode }}</span>
+            <span class="status-badge" [class.resolved]="query.isResolved" [class.urgent]="query.isUrgent">
+              {{ query.isResolved ? 'Resolved' : query.isUrgent ? 'Urgent' : 'Open' }}
+            </span>
+          </div>
+        </div>
+        
+        <p class="query-description">{{ query.queryTopicDescription }}</p>
+        
+        <div class="query-footer">
+          <div class="query-info">
+            <span>Created: {{ formatDate(query.topicCreationDate) }}</span>
+            <span *ngIf="query.lastActivity">Last activity: {{ formatDate(query.lastActivity) }}</span>
+            <span>Responses: {{ getResponseCount(query) }}</span>
+            <span *ngIf="query.isUrgent" class="urgent-indicator">⚠️ Urgent</span>
+          </div>
+          
+          <div class="query-actions">
+            <button class="btn-primary" (click)="viewQueryDetails(query)">View & Respond</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="selectedQuery">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ selectedQuery.queryTopicTitle }}</h2>
+        <button class="close-btn" (click)="selectedQuery = null">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="query-details">
+          <p><strong>Description:</strong> {{ selectedQuery.queryTopicDescription }}</p>
+          <p><strong>Module:</strong> {{ selectedQuery.relatedModuleCode }}</p>
+          <p><strong>Status:</strong> 
+            <span [class.resolved]="selectedQuery.isResolved" [class.urgent]="selectedQuery.isUrgent">
+              {{ selectedQuery.isResolved ? 'Resolved' : selectedQuery.isUrgent ? 'Urgent' : 'Open' }}
+            </span>
+          </p>
+          <p><strong>Created:</strong> {{ formatDate(selectedQuery.topicCreationDate) }}</p>
+          <p><strong>Last Activity:</strong> {{ formatDate(selectedQuery.lastActivity) }}</p>
+        </div>
+
+        <div class="responses-section">
+          <h3>Responses ({{ getResponseCount(selectedQuery) }})</h3>
+          
+          <div *ngIf="getResponseCount(selectedQuery) === 0" class="no-responses">
+            <p>No responses yet. Be the first to respond!</p>
+          </div>
+
+          <div class="response-list" *ngIf="getResponseCount(selectedQuery) > 0">
+            <div class="response-card" *ngFor="let response of getResponsesArray(selectedQuery)"
+                 [class.tutor-response]="isTutorResponse(response)" 
+                 [class.student-response]="!isTutorResponse(response)">
+              <div class="response-header">
+                <strong>{{ isTutorResponse(response) ? 'Your Response' : 'Student Response' }}</strong>
+                <span class="response-date">{{ formatDate(response.responseCreationDate) }}</span>
+                <span *ngIf="response.isSolution" class="solution-badge">✅ Solution</span>
+              </div>
+              <p class="response-comment">{{ response.comment }}</p>
+              
+              <div *ngIf="response.mediaContentUrl" class="media-attachment">
+                <div class="media-preview" *ngIf="isImageFile(response.mediaContentUrl)">
+                  <img [src]="getMediaUrl(response.mediaContentUrl)" 
+                       (click)="viewMediaFile(response.mediaContentUrl)"
+                       alt="Attached image" class="preview-image">
+                  <button class="view-media-btn" (click)="viewMediaFile(response.mediaContentUrl)">
+                    🔍 View Image
+                  </button>
+                </div>
+                
+                <div class="media-preview" *ngIf="!isImageFile(response.mediaContentUrl)">
+                  <div class="file-info">
+                    <span class="file-icon">📎</span>
+                    <span class="file-name">{{ getFileNameFromUrl(response.mediaContentUrl) }}</span>
+                  </div>
+                  <div class="file-actions">
+                    <button class="btn-secondary" (click)="viewMediaFile(response.mediaContentUrl)">
+                      View
+                    </button>
+                    <button class="btn-outline" 
+                            (click)="downloadFile(response.mediaContentUrl, getFileNameFromUrl(response.mediaContentUrl))">
+                      Download
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="add-response" *ngIf="!selectedQuery.isResolved">
+            <h4>Add Your Response</h4>
+            <form (ngSubmit)="addResponse()" #responseForm="ngForm">
+              <div class="form-group">
+                <textarea [(ngModel)]="newResponse.comment" name="comment" 
+                          placeholder="Type your response to the student..." required rows="4"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="mediaFile">Attach File (Optional)</label>
+                <input type="file" id="mediaFile" (change)="onFileSelected($event)" 
+                      accept="*/*" class="file-input">
+                <small class="file-help">You can attach any file type (max 100MB)</small>
+                
+                <div *ngIf="selectedFile" class="selected-file">
+                  <span>Selected: {{selectedFile.name}}</span>
+                  <button type="button" (click)="removeSelectedFile()" class="remove-file-btn">×</button>
+                </div>
+              </div>
+              
+              <div class="form-checkbox">
+                <label>
+                  <input type="checkbox" [(ngModel)]="newResponse.isSolution" name="isSolution">
+                  Mark as solution
+                </label>
+              </div>
+              
+              <button type="submit" [disabled]="responseForm.invalid || isAddingResponse" class="btn-primary">
+                {{ isAddingResponse ? 'Adding Response...' : 'Add Response' }}
+              </button>
+            </form>
+          </div>
+
+          <div *ngIf="selectedQuery.isResolved" class="resolved-message">
+            <p class="resolved-text">✅ This query has been resolved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isViewingMedia && currentMediaUrl">
+    <div class="modal-content media-viewer">
+      <div class="modal-header">
+        <h3>Media Viewer</h3>
+        <button class="close-btn" (click)="closeMediaViewer()">×</button>
+      </div>
+      
+      <div class="media-content">
+        <div *ngIf="currentMediaType === 'image'" class="image-container">
+          <img [src]="currentMediaUrl" alt="Media content" class="full-size-image">
+        </div>
+        
+        <div *ngIf="currentMediaType === 'pdf'" class="pdf-container">
+          <iframe [src]="currentMediaUrl" class="pdf-viewer" 
+                  width="100%" height="600px"></iframe>
+        </div>
+        
+        <div *ngIf="currentMediaType === 'video'" class="video-container">
+          <video controls class="video-player">
+            <source [src]="currentMediaUrl" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        
+        <div *ngIf="currentMediaType === 'audio'" class="audio-container">
+          <audio controls class="audio-player">
+            <source [src]="currentMediaUrl" type="audio/mpeg">
+            Your browser does not support the audio tag.
+          </audio>
+        </div>
+        
+        <div *ngIf="currentMediaType === 'download'" class="download-container">
+          <div class="download-prompt">
+            <p>This file type cannot be previewed in the browser.</p>
+            <button class="btn-primary" 
+                    (click)="downloadFile(currentMediaUrl!.split('/').pop()!, getFileNameFromUrl(currentMediaUrl!))">
+              Download File
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="media-actions">
+        <button class="btn-secondary" 
+                (click)="downloadFile(currentMediaUrl!.split('/').pop()!, getFileNameFromUrl(currentMediaUrl!))">
+          Download
+        </button>
+        <button class="btn-primary" (click)="closeMediaViewer()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

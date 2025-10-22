@@ -34,7 +34,10 @@ export class TutorService {
   getProfilePictureUrl(tutorId: number) {
     return this.profileService.getProfilePictureUrl(tutorId);
   }
-
+  
+  getTutorIdByUserId(userId: number){
+    return this.profileService.getTutorIdByUserId(userId);
+  }
 
 
 

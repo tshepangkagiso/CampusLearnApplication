@@ -6,6 +6,7 @@ import { ForumService } from '../Forum Related Services/forum.service';
 import { ChatService } from '../Private Messages Related Services/chat.service';
 import { PrivateMessagesService } from '../Private Messages Related Services/private-messages.service';
 import { SubscribeModuleRequest } from '../../models/Student Related Models/student-request.dtos';
+import { TutorProfileService } from '../Tutor Related Services/tutor-profile.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class StudentService {
     private topicsService: StudentTopicsService,
     private forumService: ForumService,
     private privateMessagesService: PrivateMessagesService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private profileTutorService: TutorProfileService
   ) {}
 
 
@@ -40,8 +42,13 @@ export class StudentService {
     return this.profileService.getProfilePicture(fileName);
   }
 
+  getRandomTutorForModule(moduleCode: string) {
+    return this.profileTutorService.getRandomTutorForModule(moduleCode);
+  }
 
-
+  getStudentIdByUserId(userId:number){
+    return this.profileService.getStudentIdByUserId(userId);
+  }
 
 
   // Subscription methods
@@ -69,8 +76,8 @@ export class StudentService {
 
 
   // Topics methods
-  createQuery(request: any) {
-    return this.topicsService.createQuery(request);
+  createQuery(request: any, tutorId: number) {
+    return this.topicsService.createQuery(request, tutorId);
   }
 
   getStudentQueries(studentId: number) {

@@ -15,10 +15,9 @@ export interface UpdateQueryRequest {
 
 export interface CreateTutorResponseRequest {
   comment: string;
-  mediaContent?: File;
+  mediaContent?: File;  
   isSolution: boolean;
 }
-
 export interface CreateStudentResponseRequest {
   comment: string;
 }
@@ -28,3 +27,4 @@ export interface UpdateTutorResponseRequest {
   mediaContent?: File;
   isSolution: boolean;
 }
+

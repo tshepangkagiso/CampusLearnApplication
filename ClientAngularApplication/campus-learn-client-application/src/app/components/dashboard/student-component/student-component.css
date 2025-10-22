@@ -130,6 +130,36 @@
   }
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    height: auto;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .nav-links {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-link {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+
+  .user-menu {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-brand h1 {
+    font-size: 1.5em;
+  }
+}
+
 
 /* Dashboard Layout */
 .dashboard {

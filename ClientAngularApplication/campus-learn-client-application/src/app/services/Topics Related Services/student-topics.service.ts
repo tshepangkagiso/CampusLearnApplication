@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../models/environments/environment';
 import { CreateQueryRequest, UpdateQueryRequest, CreateStudentResponseRequest } from '../../models/Topics Related Models/topics-request.dtos';
 import { QueryTopicResponse, StudentQueriesResponse, QueryResponsesResponse, QueryResponseResponse } from '../../models/Topics Related Models/topics-response.dtos';
@@ -20,18 +20,53 @@ export class StudentTopicsService {
   //requests
 
   // Create a new query topic
-  createQuery(request: CreateQueryRequest): Observable<QueryTopicResponse> {
-    return this.http.post<QueryTopicResponse>(`${this.baseUrlQuery}/queries`, request);
+  createQuery(request: CreateQueryRequest, tutorId: number): Observable<QueryTopicResponse> {
+    return this.http.post<QueryTopicResponse>(`${this.baseUrlQuery}/queries/${tutorId}`, request);
   }
 
   // Get all queries by student
   getStudentQueries(studentId: number): Observable<StudentQueriesResponse> {
-    return this.http.get<StudentQueriesResponse>(`${this.baseUrlQuery}/students/${studentId}/queries`);
+    return this.http.get<any>(`${this.baseUrlQuery}/students/${studentId}/queries`).pipe(
+      map(apiResponse => {
+        console.log('Raw API Response:', apiResponse);
+        
+        // Transform the API response to match your expected structure
+        return {
+          studentId: apiResponse.studentId,
+          totalQueries: apiResponse.totalQueries,
+          queries: apiResponse.queries?.$values || []  // Extract the nested array
+        };
+      }),
+      catchError(error => {
+        console.error('Error fetching student queries:', error);
+        // Return empty structure on error
+        return of({
+          studentId: studentId,
+          totalQueries: 0,
+          queries: []
+        });
+      })
+    );
   }
 
   // Get specific query by ID
   getQueryById(queryId: number): Observable<QueryTopicResponse> {
-    return this.http.get<QueryTopicResponse>(`${this.baseUrlQuery}/queries/${queryId}`);
+    return this.http.get<any>(`${this.baseUrlQuery}/queries/${queryId}`).pipe(
+      map(apiResponse => {
+        console.log('Raw query API response:', apiResponse);
+        
+        // Transform the response to handle nested structures
+        if (apiResponse.responses && apiResponse.responses.$values) {
+          apiResponse.responses = apiResponse.responses.$values;
+        }
+        
+        return apiResponse;
+      }),
+      catchError(error => {
+        console.error('Error fetching query:', error);
+        throw error;
+      })
+    );
   }
 
   // Update a query (mark as resolved, update details)

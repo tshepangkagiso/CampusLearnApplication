@@ -4,6 +4,47 @@
 [ApiController]
 public class UserProfileController(UserManagementDbContext context, MinioService minio) : ControllerBase
 {
+    [HttpGet("{userId}/student-id")]
+    public async Task<IActionResult> GetStudentIdByUserId([FromRoute] int userId)
+    {
+        try
+        {
+            var student = await context.Students
+                .FirstOrDefaultAsync(s => s.UserProfileID == userId);
+
+            if (student == null)
+                return NotFound("Student not found for this user");
+
+            return Ok(new { StudentID = student.StudentID });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to get student ID for user {UserId}", userId);
+            return BadRequest("Failed to get student ID");
+        }
+    }
+
+    [HttpGet("{userId}/tutor-id")]
+    public async Task<IActionResult> GetTutorIdByUserId([FromRoute] int userId)
+    {
+        try
+        {
+            var tutor = await context.Tutors
+                .FirstOrDefaultAsync(t => t.UserProfileID == userId);
+
+            if (tutor == null)
+                return NotFound("Tutor not found for this user");
+
+            return Ok(new { TutorID = tutor.TutorID });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to get tutor ID for user {UserId}", userId);
+            return BadRequest("Failed to get tutor ID");
+        }
+    }
+
+
 
     //route for updating user
     [HttpPut("update")]

@@ -44,4 +44,10 @@ export class StudentProfileService {
   getProfilePicture(fileName: string): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/userprofile/file/${fileName}`, { responseType: 'blob' });
   }
+  
+  getStudentIdByUserId(userId: number): Observable<{ studentID: number }> {
+    return this.http.get<{ studentID: number }>(`${this.baseUrl}/userprofile/${userId}/student-id`);
+  }
+
+
 }

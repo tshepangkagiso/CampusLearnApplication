@@ -43,3 +43,15 @@ export interface Tutor {
   surname?: string;
   email?: string;
 }
+
+
+export interface AssignedTutor {
+  message: string;
+  tutor: {
+    tutorID: number;
+    name: string;
+    surname: string;
+    email: string;
+    qualifiedSince: string; 
+  };
+}

@@ -18,6 +18,10 @@ export class TutorProfileService {
     return this.http.get<TutorProfileResponse>(`${this.baseUrl}/${tutorId}`);
   }
 
+  getTutorIdByUserId(userId: number): Observable<{ tutorID: number }> {
+    return this.http.get<{ tutorID: number }>(`${this.baseUrl}/${userId}/tutor-id`);
+  } 
+
   // Update tutor profile
   updateTutorProfile(request: UpdateTutorProfileRequest): Observable<any> {
     const formData = new FormData();
@@ -43,5 +47,11 @@ export class TutorProfileService {
   // Download profile picture file
   getProfilePicture(fileName: string): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/file/${fileName}`, { responseType: 'blob' });
+  }
+
+
+  // get random tutor for module
+  getRandomTutorForModule(moduleCode: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/modules/${moduleCode}/assigned-tutor`);
   }
 }
