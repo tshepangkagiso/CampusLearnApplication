@@ -22,6 +22,15 @@
 </nav>
 
 <div class="messages-container">
+  <!-- Notification Banner -->
+  <div *ngIf="showNotification" class="notification-banner">
+    <div class="notification-content">
+      <span class="notification-icon">🔔</span>
+      <span>{{ notificationMessage }}</span>
+    </div>
+    <button class="notification-close" (click)="closeNotification()">×</button>
+  </div>
+
   <div class="messages-header">
     <h1>My Messages</h1>
     <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
@@ -52,7 +61,8 @@
             <span class="module-code">{{ room.moduleCode }}</span>
           </div>
           <div class="room-meta">
-            <span class="tutor-info">Tutor ID: {{ room.tutorId }}</span>
+            <!-- Changed from Tutor ID to just "Tutor" -->
+            <span class="tutor-info">{{ getTutorDisplayName(room.tutorId) }}</span>
             <span class="message-count">{{ room.messages.length || 0 }} messages</span>
           </div>
         </div>
@@ -71,7 +81,8 @@
           <h3>{{ selectedRoom.title }}</h3>
           <div class="chat-header-info">
             <span class="module-badge">{{ selectedRoom.moduleCode }}</span>
-            <span class="tutor-badge">Tutor: {{ selectedRoom.tutorId }}</span>
+            <!-- Changed from Tutor ID to just "Tutor" -->
+            <span class="tutor-badge">{{ getTutorDisplayName(selectedRoom.tutorId) }}</span>
           </div>
         </div>
 
@@ -84,6 +95,8 @@
             [class.other-message]="!isMyMessage(message.senderId)"
           >
             <div class="message-content">
+              <!-- Added sender name -->
+              <div class="sender-name">{{ getSenderDisplayName(message.senderId) }}</div>
               <p>{{ message.content }}</p>
               <span class="message-time">{{ formatDate(message.timestamp) }}</span>
             </div>

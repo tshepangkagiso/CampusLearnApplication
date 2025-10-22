@@ -26,8 +26,12 @@ export class StudentMessages implements OnInit, OnDestroy {
   public newMessage: string = '';
   public isLoading = false;
   public isConnected = false;
+  public showNotification = false;
+  public notificationMessage = '';
+  public tutorNames: Map<number, string> = new Map(); // Cache for tutor names
   
   private messageSubscription?: Subscription;
+  private notificationTimeout?: any;
 
   async ngOnInit() {
     const user = this.sessionUser.getUser();
@@ -59,6 +63,7 @@ export class StudentMessages implements OnInit, OnDestroy {
       this.messageSubscription = this.studentService.onChatMessageReceived().subscribe(
         (message) => {
           if (this.selectedRoom && message.senderId !== this.studentId) {
+            // Add message to list
             this.messages.push({
               messageId: 0, // Temporary ID
               roomId: this.selectedRoom.roomId,
@@ -66,11 +71,62 @@ export class StudentMessages implements OnInit, OnDestroy {
               content: message.content,
               timestamp: new Date(message.timestamp)
             });
+
+            // Show notification if not in this chat room or if page is not focused
+            if (this.selectedRoom.roomId !== this.getRoomIdFromMessage(message) || !document.hasFocus()) {
+              this.showNotificationAlert('New message from tutor');
+            }
+          } else if (!this.selectedRoom) {
+            // Show notification for new message in any room
+            this.showNotificationAlert('New message from tutor');
           }
         }
       );
     } catch (error) {
       console.error('Failed to start chat connection:', error);
+    }
+  }
+
+  // Helper method to extract room ID from message (you might need to adjust this based on your message structure)
+  private getRoomIdFromMessage(message: any): number {
+    // This depends on how your message data is structured
+    // You might need to modify this based on your actual message format
+    return message.roomId || 0;
+  }
+
+  showNotificationAlert(message: string) {
+    this.notificationMessage = message;
+    this.showNotification = true;
+
+    // Auto-hide notification after 5 seconds
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
+    
+    this.notificationTimeout = setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+
+    // Browser notification (if permitted)
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('CampusLearn Message', {
+        body: message,
+        icon: '/assets/logo.png' // Add your app icon
+      });
+    }
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
+  }
+
+  // Request browser notification permission
+  requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
     }
   }
 
@@ -86,6 +142,9 @@ export class StudentMessages implements OnInit, OnDestroy {
         } else {
           this.chatRooms = [];
         }
+        
+        // Pre-load tutor names for all chat rooms
+        this.loadTutorNames();
         this.isLoading = false;
       },
       error: (err) => {
@@ -96,10 +155,29 @@ export class StudentMessages implements OnInit, OnDestroy {
     });
   }
 
+  // Load tutor names using existing service methods
+  loadTutorNames() {
+    this.chatRooms.forEach(room => {
+      if (room.tutorId && !this.tutorNames.has(room.tutorId)) {
+        // Use the existing service to get tutor info
+        // Since we don't have a direct method, we'll use a placeholder
+        // You can replace this with actual tutor name lookup if available
+        this.tutorNames.set(room.tutorId, `Tutor`);
+      }
+    });
+  }
+
+  getTutorDisplayName(tutorId: number): string {
+    return this.tutorNames.get(tutorId) || 'Tutor';
+  }
+
   async selectChatRoom(room: ChatRoomResponse) {
     this.selectedRoom = room;
     await this.studentService.joinChatRoom(room.roomId);
     this.loadChatRoomMessages(room.roomId);
+    
+    // Hide any active notifications when selecting a room
+    this.closeNotification();
   }
 
   loadChatRoomMessages(roomId: number) {
@@ -158,12 +236,23 @@ export class StudentMessages implements OnInit, OnDestroy {
     return senderId === this.studentId;
   }
 
+  getSenderDisplayName(senderId: number): string {
+    if (senderId === this.studentId) {
+      return 'You';
+    } else {
+      return this.getTutorDisplayName(senderId);
+    }
+  }
+
   ngOnDestroy() {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
     if (this.selectedRoom) {
       this.studentService.leaveChatRoom(this.selectedRoom.roomId);
+    }
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
     }
   }
 

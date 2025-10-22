@@ -3,6 +3,7 @@ using CampusLearn.PrivateMessaging.API.RabbitMQ;
 using CampusLearn.PrivateMessaging.API.Signal_R.ChatRoomService;
 using CampusLearn.PrivateMessaging.API.Signal_R.Hubs;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -30,7 +31,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Host.UseSerilog();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 
 builder.Services.AddHostedService<TopicConsumerService>();
 
