@@ -61,7 +61,8 @@ export class AuthService {
 
   onLogout(){
     sessionStorage.removeItem(this.tokenKey);
-    sessionStorage.removeItem(this.userKey)
+    sessionStorage.removeItem(this.userKey);
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 

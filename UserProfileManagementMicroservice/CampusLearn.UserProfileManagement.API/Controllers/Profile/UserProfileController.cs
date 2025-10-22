@@ -45,8 +45,7 @@ public class UserProfileController(UserManagementDbContext context, MinioService
             oldUser.Qualification = Enum.IsDefined(typeof(Qualification), request.Qualification)
                 ? request.Qualification : oldUser.Qualification;
 
-            oldUser.UserRole = Enum.IsDefined(typeof(UserRole), request.UserRole)
-                ? request.UserRole : oldUser.UserRole;
+            oldUser.UserRole = oldUser.UserRole;
 
             // Handle profile picture upload
             if (request.ProfilePicture != null && request.ProfilePicture.Length > 0)
