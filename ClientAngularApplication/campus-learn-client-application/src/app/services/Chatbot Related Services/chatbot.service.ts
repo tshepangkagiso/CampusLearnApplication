@@ -9,7 +9,7 @@ import { environment } from '../../models/environments/environment';
   providedIn: 'root'
 })
 export class ChatbotService {
-  private baseUrl = `${environment.apiUrl}/agent`;
+  private baseUrl = `${environment.apiUrl}/agent/chatbot`;
 
   constructor(private http: HttpClient) {}
 

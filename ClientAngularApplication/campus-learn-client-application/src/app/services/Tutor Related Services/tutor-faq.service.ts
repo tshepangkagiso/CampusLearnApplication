@@ -9,7 +9,7 @@ import { FAQResponse } from '../../models/Tutor Related Models/tutor-response.dt
   providedIn: 'root'
 })
 export class TutorFAQService {
-  private baseUrl = `${environment.apiUrl}/faqs`;
+  private baseUrl = `${environment.apiUrl}/topics/faqs`;
 
   constructor(private http: HttpClient) {}
 

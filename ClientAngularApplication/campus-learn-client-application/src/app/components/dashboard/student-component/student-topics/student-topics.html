@@ -1,0 +1,27 @@
+<!-- navigation.component.html -->
+<nav class="navbar">
+  <div class="nav-container">
+    <!-- Logo and Brand -->
+    <div class="nav-brand">
+      <h1>CampusLearn™</h1>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="nav-links">
+      <a class="nav-link" [routerLink]="['/student']">Home</a>
+      <a class="nav-link" [routerLink]="['/student/forums']">Forum</a>
+      <a class="nav-link" [routerLink]="['/student/messages']">Messages</a>
+      <a class="nav-link" [routerLink]="['/student/chatbot']">Chatbot</a>
+    </div>
+
+    <!-- User Menu -->
+    <div class="nav-user">
+      <div class="user-menu">
+        <span class="user-greeting">Welcome! Student</span>
+        <button class="logout-btn" (click)="onLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<h1>Topics Page</h1>

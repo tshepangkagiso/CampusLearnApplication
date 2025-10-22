@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { AvailableTutorModulesResponse, TutorProfileResponse, TutorQualificationsResponse } from '../../../models/Tutor Related Models/tutor-response.dtos';
 import { SubscribeModuleRequest, UpdateTutorProfileRequest } from '../../../models/Tutor Related Models/tutor-request.dtos';
 import { TutorService } from '../../../services/Tutor Related Services/tutor.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tutor-component',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './tutor-component.html',
   styleUrl: './tutor-component.css'
 })

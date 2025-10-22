@@ -19,7 +19,7 @@ export class ChatService {
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:7000/chatHub')
+      .withUrl('http://localhost:7000/messages/chatHub')
       .build();
 
     this.registerEvents();

@@ -8,11 +8,10 @@
 
     <!-- Navigation Links -->
     <div class="nav-links">
-      <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-      <a class="nav-link" routerLink="/modules">Modules</a>
-      <a class="nav-link" routerLink="/forum">Forum</a>
-      <a class="nav-link" routerLink="/messages">Messages</a>
-      <a class="nav-link" routerLink="/help">Help</a>
+      <a class="nav-link" [routerLink]="['/tutor']">Home</a>
+      <a class="nav-link" [routerLink]="['/tutor/topics']">Topics</a>
+      <a class="nav-link" [routerLink]="['/tutor/forums']">Forum</a>
+      <a class="nav-link" [routerLink]="['/tutor/messages']">Messages</a>
     </div>
 
     <!-- User Menu -->

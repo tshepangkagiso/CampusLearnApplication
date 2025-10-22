@@ -6,10 +6,11 @@ import { Qualification, UserRole } from '../../../models/Student Related Models/
 import { StudentService } from '../../../services/Student Related Services/student.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-student-component',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './student-component.html',
   styleUrl: './student-component.css'
 })

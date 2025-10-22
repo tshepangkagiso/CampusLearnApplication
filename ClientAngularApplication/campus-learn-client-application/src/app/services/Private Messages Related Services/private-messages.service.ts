@@ -9,7 +9,7 @@ import { ChatRoomsListResponse, ChatRoomResponse, ChatRoomStatsResponse, Message
   providedIn: 'root'
 })
 export class PrivateMessagesService {
-  private baseUrl = `${environment.apiUrl}/messages`;
+  private baseUrl = `${environment.apiUrl}/messages/message`;
 
   constructor(private http: HttpClient) {}
 
