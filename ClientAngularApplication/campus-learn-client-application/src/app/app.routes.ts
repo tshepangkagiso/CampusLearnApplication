@@ -17,6 +17,8 @@ import { StudentChatbot } from './components/dashboard/student-component/student
 import { TutorForums } from './components/dashboard/tutor-component/tutor-forums/tutor-forums';
 import { TutorTopics } from './components/dashboard/tutor-component/tutor-topics/tutor-topics';
 import { TutorMessages } from './components/dashboard/tutor-component/tutor-messages/tutor-messages';
+import { StudentFaq } from './components/dashboard/student-component/student-faq/student-faq';
+import { TutorFaq } from './components/dashboard/tutor-component/tutor-faq/tutor-faq';
 
 export const routes: Routes = [
     {path:'login', component: LoginComponent, title:'Login - CampusLearn™'},
@@ -33,10 +35,12 @@ export const routes: Routes = [
     {path:'student/forums', component: StudentForums, title:'Student Forums - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]},
     {path:'student/messages', component: StudentMessages, title:'Student Messages - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]},
     {path:'student/chatbot', component: StudentChatbot, title:'Student Chatbot - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]},
+    {path:'student/faqs', component: StudentFaq, title:'Student FAQS - CampusLearn™', canActivate:[AuthGuardService , AuthGuardStudentService]},
 
     //Tutor related protected routes
     {path:'tutor', component: TutorComponent, title:'Tutor Dashboard - CampusLearn™', canActivate:[AuthGuardService , AuthGuardTutorService]},
     {path:'tutor/topics', component: TutorTopics , title:'Tutor Topics - CampusLearn™', canActivate:[AuthGuardService , AuthGuardTutorService]},
     {path:'tutor/forums', component: TutorForums, title:'Tutor Forums - CampusLearn™', canActivate:[AuthGuardService , AuthGuardTutorService]},
     {path:'tutor/messages', component: TutorMessages, title:'Tutor Messages - CampusLearn™', canActivate:[AuthGuardService , AuthGuardTutorService]},
+    {path:'tutor/faqs', component: TutorFaq, title:'Tutor FAQS - CampusLearn™', canActivate:[AuthGuardService , AuthGuardTutorService]},
 ];
