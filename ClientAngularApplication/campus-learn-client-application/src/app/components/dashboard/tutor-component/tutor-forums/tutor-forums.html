@@ -16,7 +16,7 @@
     <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! Tutor</span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
