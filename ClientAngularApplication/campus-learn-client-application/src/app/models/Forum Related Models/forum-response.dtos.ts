@@ -1,5 +1,7 @@
 
 export interface ForumTopicResponse {
+  responseID: number;
+  responseUpVote: any;
   forumTopicID: number;
   forumTopicTitle: string;
   forumTopicDescription: string;

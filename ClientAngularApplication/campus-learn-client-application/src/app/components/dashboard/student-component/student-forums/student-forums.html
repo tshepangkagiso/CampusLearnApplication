@@ -1,29 +1,290 @@
-<!-- navigation.component.html -->
+<!-- Navigation -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
-
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/student']">Home</a>
       <a class="nav-link" [routerLink]="['/student/topics']">Topics</a>
       <a class="nav-link" [routerLink]="['/student/messages']">Messages</a>
       <a class="nav-link" [routerLink]="['/student/chatbot']">Chatbot</a>
       <a class="nav-link" [routerLink]="['/student/faqs']">FAQs</a>
+      <a class="nav-link active" [routerLink]="['/student/forums']">Forums</a>
     </div>
-
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser.name}} {{currentLoggedInUser.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
+<!-- Main Content -->
+<div class="forums-container">
+  <div class="forums-header">
+    <h1>Student Forums</h1>
+    <p>Discuss, share knowledge, and collaborate with fellow students</p>
+    <button class="btn-primary" (click)="showTopicForm = !showTopicForm">
+      {{ showTopicForm ? 'Cancel' : 'Create New Topic' }}
+    </button>
+  </div>
 
-<h1>Forums Page</h1>
+  <!-- Messages -->
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="clearMessages()">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="clearMessages()">×</button>
+  </div>
+
+  <!-- Create New Topic Form -->
+  <div *ngIf="showTopicForm" class="form-container">
+    <h3>Create New Forum Topic</h3>
+    <form (ngSubmit)="createTopic()" #topicForm="ngForm">
+      <div class="form-group">
+        <label for="title">Topic Title *</label>
+        <input type="text" id="title" [(ngModel)]="newTopic.title" name="title" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="moduleCode">Module Code *</label>
+        <select id="moduleCode" [(ngModel)]="newTopic.moduleCode" name="moduleCode" required>
+          <option value="">Select a module</option>
+          <option *ngFor="let module of subscribedModules" [value]="module.moduleCode">
+            {{ module.moduleCode }} - {{ module.moduleName }}
+          </option>
+        </select>
+        <small *ngIf="subscribedModules.length === 0" class="no-modules-warning">
+          You are not subscribed to any modules. Please subscribe to modules first.
+        </small>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea id="description" [(ngModel)]="newTopic.description" name="description" rows="4" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="newTopic.isAnonymous" name="isAnonymous">
+          Post anonymously
+        </label>
+      </div>
+      
+      <div *ngIf="newTopic.isAnonymous" class="form-group">
+        <label for="anonymousName">Anonymous Name (Optional)</label>
+        <input type="text" id="anonymousName" [(ngModel)]="newTopic.anonymousName" name="anonymousName">
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="loading || subscribedModules.length === 0">
+          {{ loading ? 'Creating...' : 'Create Topic' }}
+        </button>
+        <button type="button" class="btn-secondary" (click)="showTopicForm = false">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Forum Topics List -->
+  <div class="topics-section">
+    <h2>Forum Topics</h2>
+    
+    <div *ngIf="loading && !selectedTopic" class="loading">Loading topics...</div>
+    
+    <div *ngIf="!loading && forumTopics.length === 0" class="empty-state">
+      <p>No forum topics yet. Be the first to start a discussion!</p>
+    </div>
+
+    <div class="topics-list">
+      <div *ngFor="let topic of forumTopics" 
+           class="topic-card" 
+           [class.selected]="selectedTopic?.forumTopicID === topic.forumTopicID"
+           (click)="selectTopic(topic)">
+        
+        <div class="topic-header">
+          <h4>{{ topic.forumTopicTitle }}</h4>
+          <span class="module-badge">{{ topic.relatedModuleCode }}</span>
+        </div>
+        
+        <p class="topic-description">{{ topic.forumTopicDescription }}</p>
+        
+        <div class="topic-meta">
+          <span class="author">
+            Posted by: {{ getTopicAuthor(topic) }}
+          </span>
+          <span class="date">{{ topic.topicCreationDate | date:'medium' }}</span>
+        </div>
+        
+        <div class="topic-stats">
+          <button class="upvote-btn" (click)="upvoteTopic(topic.forumTopicID); $event.stopPropagation()">
+            👍 {{ topic.topicUpVote }}
+          </button>
+          <span class="responses">{{ topic.responses?.length || 0 }} responses</span>
+          <span class="views">{{ topic.viewCount }} views</span>
+        </div>
+        
+        <div class="topic-status">
+          <span *ngIf="topic.isPinned" class="pinned">📌 Pinned</span>
+          <span *ngIf="topic.isLocked" class="locked">🔒 Locked</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected Topic and Responses -->
+  <div *ngIf="selectedTopic" class="selected-topic-section">
+    <div class="topic-detail">
+      <button class="back-btn" (click)="selectedTopic = undefined">← Back to Topics</button>
+      
+      <div class="topic-detail-card">
+        <h3>{{ selectedTopic.forumTopicTitle }}</h3>
+        <p class="topic-description">{{ selectedTopic.forumTopicDescription }}</p>
+        
+        <div class="topic-meta">
+          <span class="author">
+            Posted by: {{ getTopicAuthor(selectedTopic) }}
+          </span>
+          <span class="date">{{ selectedTopic.topicCreationDate | date:'medium' }}</span>
+          <span class="module">{{ selectedTopic.relatedModuleCode }}</span>
+        </div>
+        
+        <div class="topic-actions">
+          <button class="upvote-btn" (click)="upvoteTopic(selectedTopic.forumTopicID)">
+            👍 {{ selectedTopic.topicUpVote }} Upvotes
+          </button>
+        </div>
+      </div>
+
+      <!-- Responses Section -->
+      <div class="responses-section">
+        <h4>Responses ({{ topicResponses.length }})</h4>
+        
+        <div *ngIf="selectedTopic.isLocked" class="locked-message">
+          🔒 This topic is locked. No new responses can be posted.
+        </div>
+
+        <!-- Add Response Form -->
+        <div *ngIf="!selectedTopic.isLocked" class="response-form">
+          <h5>Add Your Response</h5>
+          <form (ngSubmit)="createResponse()" #responseForm="ngForm">
+            <div class="form-group">
+              <label for="responseComment">Your Response *</label>
+              <textarea id="responseComment" [(ngModel)]="newResponse.comment" name="comment" rows="3" required></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="mediaFile">Attach Media (Optional)</label>
+              <input type="file" id="mediaFile" (change)="onFileSelected($event)" accept="*/*">
+              <small>You can attach any type of file (images, documents, etc.)</small>
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="newResponse.isAnonymous" name="isAnonymous">
+                Post anonymously
+              </label>
+            </div>
+            
+            <div *ngIf="newResponse.isAnonymous" class="form-group">
+              <label for="responseAnonymousName">Anonymous Name (Optional)</label>
+              <input type="text" id="responseAnonymousName" [(ngModel)]="newResponse.anonymousName" name="anonymousName">
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" [disabled]="loading">
+                {{ loading ? 'Posting...' : 'Post Response' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Responses List -->
+        <div class="responses-list">
+          <div *ngIf="loading" class="loading">Loading responses...</div>
+          
+          <div *ngIf="!loading && topicResponses.length === 0" class="empty-state">
+            <p>No responses yet. Be the first to respond!</p>
+          </div>
+
+          <div *ngFor="let response of topicResponses" class="response-card">
+            <div class="response-header">
+              <span class="author">
+                {{ getResponseAuthor(response) }}
+              </span>
+              <span class="date">{{ response.responseCreationDate | date:'medium' }}</span>
+            </div>
+            
+            <p class="response-comment">{{ response.comment }}</p>
+            
+            <!-- Media Content Display -->
+            <div *ngIf="response.mediaContentUrl" class="response-media">
+              <div [ngSwitch]="getFileType(response.mediaContentUrl)">
+                
+                <!-- Image Display -->
+                <div *ngSwitchCase="'image'" class="media-container image-container">
+                  <img [src]="getMediaUrl(response.mediaContentUrl)" 
+                       [alt]="response.mediaContentUrl"
+                       class="media-image"
+                       (click)="downloadFile(response.mediaContentUrl)">
+                  <div class="media-overlay">
+                    <button class="download-btn" (click)="downloadFile(response.mediaContentUrl)">
+                      📥 Download
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Video Display -->
+                <div *ngSwitchCase="'video'" class="media-container video-container">
+                  <video controls class="media-video">
+                    <source [src]="getMediaUrl(response.mediaContentUrl)" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                  <div class="media-overlay">
+                    <button class="download-btn" (click)="downloadFile(response.mediaContentUrl)">
+                      📥 Download
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Audio Display -->
+                <div *ngSwitchCase="'audio'" class="media-container audio-container">
+                  <audio controls class="media-audio">
+                    <source [src]="getMediaUrl(response.mediaContentUrl)" type="audio/mpeg">
+                    Your browser does not support the audio tag.
+                  </audio>
+                  <div class="media-info">
+                    <button class="download-btn" (click)="downloadFile(response.mediaContentUrl)">
+                      📥 Download Audio
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Generic File Display -->
+                <div *ngSwitchDefault class="media-container file-container">
+                  <div class="file-info">
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">{{ response.mediaContentUrl }}</span>
+                  </div>
+                  <button class="download-btn" (click)="downloadFile(response.mediaContentUrl)">
+                    📥 Download File
+                  </button>
+                </div>
+                
+              </div>
+            </div>
+            
+            <div class="response-actions">
+              <button class="upvote-btn" (click)="upvoteResponse(response.responseID)">
+                👍 {{ response.responseUpVote }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
