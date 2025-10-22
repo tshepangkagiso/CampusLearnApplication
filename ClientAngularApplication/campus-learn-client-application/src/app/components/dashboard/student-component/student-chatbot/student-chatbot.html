@@ -1,12 +1,10 @@
 <!-- navigation.component.html -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
 
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/student']">Home</a>
       <a class="nav-link" [routerLink]="['/student/topics']">Topics</a>
@@ -14,14 +12,83 @@
       <a class="nav-link" [routerLink]="['/student/messages']">Messages</a>
     </div>
 
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
-<h1>Chatbot Page</h1>
+<div class="chatbot-container">
+  <div class="chatbot-header">
+    <h1>AI Tutor Assistant</h1>
+    <p>Get instant help with your academic questions</p>
+  </div>
+
+  <div class="module-selector">
+    <label for="moduleSelect">Select Module:</label>
+    <select id="moduleSelect" [(ngModel)]="selectedModule" class="module-dropdown">
+      <option value="">Choose a module</option>
+      <option *ngFor="let module of subscribedModules" [value]="module.moduleCode">
+        {{ module.moduleCode }} - {{ module.moduleName }}
+      </option>
+    </select>
+  </div>
+
+  <div class="chat-container">
+    <div class="messages-container">
+      <div *ngIf="messages.length === 0" class="welcome-message">
+        <div class="welcome-content">
+          <h3>👋 Hello {{currentLoggedInUser?.name}}!</h3>
+          <p>I'm your AI tutor assistant. Select a module and ask me anything about:</p>
+          <ul>
+            <li>Course concepts and definitions</li>
+            <li>Study tips and strategies</li>
+            <li>Assignment guidance</li>
+            <li>Exam preparation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div *ngFor="let message of messages" 
+           [class]="'message ' + message.type + '-message'">
+        <div class="message-content">
+          <div class="message-text">{{ message.content }}</div>
+          <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-message">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="loading-text">AI Tutor is thinking...</div>
+      </div>
+    </div>
+
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea 
+          [(ngModel)]="userInput" 
+          placeholder="Type your question here..." 
+          (keydown.enter)="$event.preventDefault(); sendMessage()"
+          [disabled]="!selectedModule || isLoading"
+          class="message-input">
+        </textarea>
+        <button 
+          (click)="sendMessage()" 
+          [disabled]="!userInput.trim() || !selectedModule || isLoading"
+          class="send-button">
+          Send
+        </button>
+      </div>
+      <div *ngIf="!selectedModule" class="module-warning">
+        Please select a module to start chatting
+      </div>
+    </div>
+  </div>
+</div>
