@@ -71,4 +71,8 @@ export class AuthService {
   {
     return this.httpClient.post<AuthRegisterResponse>(`${this.baseUrl}/register`, user);
   }
+
+  getToken(): string {
+    return localStorage.getItem('token') || '';
+  }
 }

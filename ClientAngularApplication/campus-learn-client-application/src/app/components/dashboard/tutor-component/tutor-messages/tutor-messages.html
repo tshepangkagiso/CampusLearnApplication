@@ -1,12 +1,9 @@
-<!-- navigation.component.html -->
 <nav class="navbar">
   <div class="nav-container">
-    <!-- Logo and Brand -->
     <div class="nav-brand">
       <h1>CampusLearn™</h1>
     </div>
 
-    <!-- Navigation Links -->
     <div class="nav-links">
       <a class="nav-link" [routerLink]="['/tutor']">Home</a>
       <a class="nav-link" [routerLink]="['/tutor/topics']">Topics</a>
@@ -14,14 +11,91 @@
       <a class="nav-link" [routerLink]="['/tutor/faqs']">My FAQs</a>
     </div>
 
-    <!-- User Menu -->
     <div class="nav-user">
       <div class="user-menu">
-        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}} </span>
+        <span class="user-greeting">Welcome! {{currentLoggedInUser?.name}} {{currentLoggedInUser?.surname}}</span>
         <button class="logout-btn" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
-<h1>Messages Page</h1>
+<div class="messages-container">
+  <div class="messages-header">
+    <h1>My Messages</h1>
+    <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+      {{ isConnected ? 'Connected' : 'Disconnected' }}
+    </div>
+  </div>
+
+  <div class="messages-layout">
+    <!-- Chat Rooms List -->
+    <div class="chat-rooms-sidebar">
+      <h3>Chat Rooms</h3>
+      <div *ngIf="isLoading" class="loading">Loading chat rooms...</div>
+      
+      <div *ngIf="!isLoading && chatRooms.length === 0" class="no-rooms">
+        <p>No active chat rooms</p>
+      </div>
+
+      <div class="room-list">
+        <div 
+          *ngFor="let room of chatRooms" 
+          class="room-item" 
+          [class.active]="selectedRoom?.roomId === room.roomId"
+          (click)="selectChatRoom(room)"
+        >
+          <div class="room-info">
+            <strong>{{ room.title }}</strong>
+            <span class="module-code">{{ room.moduleCode }}</span>
+          </div>
+          <div class="room-meta">
+            <span class="student-info">Student ID: {{ room.studentId }}</span>
+            <span class="message-count">{{ room.messages.length || 0 }} messages</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <div *ngIf="!selectedRoom" class="no-room-selected">
+        <p>Select a chat room to start messaging</p>
+      </div>
+
+      <div *ngIf="selectedRoom" class="chat-window">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <h3>{{ selectedRoom.title }}</h3>
+          <span class="module-badge">{{ selectedRoom.moduleCode }}</span>
+        </div>
+
+        <!-- Messages List -->
+        <div class="messages-list">
+          <div 
+            *ngFor="let message of messages" 
+            class="message" 
+            [class.my-message]="isMyMessage(message.senderId)"
+            [class.other-message]="!isMyMessage(message.senderId)"
+          >
+            <div class="message-content">
+              <p>{{ message.content }}</p>
+              <span class="message-time">{{ formatDate(message.timestamp) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="message-input">
+          <textarea 
+            [(ngModel)]="newMessage" 
+            placeholder="Type your message..." 
+            (keydown.enter)="$event.preventDefault(); sendMessage()"
+            rows="3"
+          ></textarea>
+          <button (click)="sendMessage()" [disabled]="!newMessage.trim()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

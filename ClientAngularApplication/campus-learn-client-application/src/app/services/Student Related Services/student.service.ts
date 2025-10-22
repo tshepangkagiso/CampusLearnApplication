@@ -182,7 +182,7 @@ export class StudentService {
 
 
 
-      // Private Messages methods
+  // Private Messages methods
   getAllChatRooms() {
     return this.privateMessagesService.getAllChatRooms();
   }
