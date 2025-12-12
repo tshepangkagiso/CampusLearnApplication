@@ -35,7 +35,15 @@
 - **n8n** - Workflow automation for AI agent  
 
 ---
-<img width="575" height="804" alt="Image" src="https://github.com/user-attachments/assets/c402ff34-bd18-4cc0-abf9-ee080a9e58db" />
+## Images
+<img width="600" height="700" alt="Image" src="https://github.com/user-attachments/assets/5962c822-cc15-4e70-839a-4f3b79b32bd6" />
+<img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/4ba347c6-270d-45f8-8829-52feff8308de" />
+<img width="567" height="809" alt="Image" src="https://github.com/user-attachments/assets/c40f3ae0-f36d-449e-a8ee-a59ad733d09a" />
+<img width="575" height="804" alt="Image" src="https://github.com/user-attachments/assets/063d209c-017d-40b2-bfae-626b1bccf132" />
+<img width="446" height="796" alt="Image" src="https://github.com/user-attachments/assets/79e11b99-53a3-43d7-9040-0389af60a226" />
+<img width="800" height="819" alt="Image" src="https://github.com/user-attachments/assets/1b9cddc6-cdac-4c8b-a5ed-7e0cb50104c8" />
+<img width="800" height="609" alt="Image" src="https://github.com/user-attachments/assets/54508e84-15ae-4fa9-88db-f5152bba34c6" />
+<img width="800" height="862" alt="Image" src="https://github.com/user-attachments/assets/8d38be2e-f8be-4ea4-957b-eb42ffd47c77" />
 
 ## 🔧 Core Functional Modules
 
