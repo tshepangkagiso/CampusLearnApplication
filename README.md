@@ -35,6 +35,7 @@
 - **n8n** - Workflow automation for AI agent  
 
 ---
+<img width="575" height="804" alt="Image" src="https://github.com/user-attachments/assets/c402ff34-bd18-4cc0-abf9-ee080a9e58db" />
 
 ## 🔧 Core Functional Modules
 
