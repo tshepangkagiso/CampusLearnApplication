@@ -10,8 +10,7 @@
   - Integrated with YARP Gateway API for unified backend access  
   - Real-time UI updates via SignalR  
   - Secure JWT-based authentication flow  
-  - Lazy-loaded feature modules for performance  
-  - Deployed via Azure Static Web Apps  
+  
 
 ### Microservices Architecture (7 APIs)
 - **User Profile Management API** - Core authentication & user management  
